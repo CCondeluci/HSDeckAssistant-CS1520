@@ -1,84 +1,159 @@
-
+import datetime
 import webapp2
 import sys
 import os
 import json
+import logging
 
-# inject './lib' dir in the path so that we can simply do "import ndb" or whatever there's in the app lib dir.
 if 'lib' not in sys.path:
     sys.path[0:0] = ['lib']
 
 import unirest
 
+from google.appengine.ext.webapp import template
+from google.appengine.api import users
+from google.appengine.ext import ndb
+from google.appengine.api import images
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
+
+
+###############################################################################
+# We'll just use this convenience function to retrieve and render a template.
+def render_template(handler, templatename, templatevalues={}):
+  path = os.path.join(os.path.dirname(__file__), 'templates/' + templatename)
+  html = template.render(path, templatevalues)
+  handler.response.out.write(html)
+
+
+###############################################################################
+# We'll use this convenience function to retrieve the current user's email.
+def get_user_email():
+  result = None
+  user = users.get_current_user()
+  if user:
+    result = user.email()
+  return result
+
+###############################################################################
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('''
-        	<html>
-        		<body>
-        			<h1>CLASS CARD LIST GENERATOR TEST</h1>
-        			<br>
-        			<p>Please select your class: </p>
-        			<br>
-        			<form action="/cardlist" method="post">
-			        	<select name="class_select">
-			        		<option value="Druid">Druid</option>
-			        		<option value="Hunter">Hunter</option>
-			        		<option value="Mage">Mage</option>
-			        		<option value="Paladin">Paladin</option>
-			        		<option value="Priest">Priest</option>
-			        		<option value="Rogue">Rogue</option>
-			        		<option value="Shaman">Shaman</option>
-			        		<option value="Warlock">Warlock</option>
-			        		<option value="Warrior">Warrior</option>
-			        	</select>
+    	email = get_user_email()
 
-        				<input type="submit" value="Get Card List">
-        			</form>
-        		</body>
-        	</html>
+    	page_params = {
+    		'user_email': email,
+     		'login_url': users.create_login_url(),
+     		'logout_url': users.create_logout_url('/')
+   		}
 
-        ''')
+    	render_template(self, 'index.html', page_params)
 
-class CardList(webapp2.RequestHandler):
-    def post(self):
-		response = unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/classes/" + self.request.get('class_select') + "?collectible=1", headers={"X-Mashape-Key": "HFXwiln4KJmshs6B1jOMfsA75kg3p1Jj1qOjsntjBvnGaWzx1v"})
+###############################################################################
+class DeckBuilder(webapp2.RequestHandler):
+    def get(self):
+    	email = get_user_email()
+    	playerClass = self.request.get('class')
+    	class_cards = get_class_cards(playerClass)
+    	neutral_cards = get_neutral_cards()
 
-		test = json.dumps(response.body, indent=1, separators=(',', ': '))
+    	page_params = {
 
-		testTwo = json.loads(test)
+    		'class_cards': class_cards,
+    		'neutral_cards': neutral_cards,
+    		'user_email': email,
+    		'login_url': users.create_login_url(),
+    		'logout_url': users.create_logout_url('/')
+    	}
+    	render_template(self, 'deckbuilder.html', page_params)
 
-		self.response.write('<html>\n<body>\n<p>' + self.request.get('class_select') + ' Class Cards: </p>\n')
+###############################################################################
+# Returns an entire class' collection, with neutral cards (collectible only)
+###############################################################################
+def get_class_collection(player_class):
+	response = unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/classes/" + player_class + "?collectible=1", 
+		headers={
+			"X-Mashape-Key": "HFXwiln4KJmshs6B1jOMfsA75kg3p1Jj1qOjsntjBvnGaWzx1v"
+		}
+	)
 
-		for x in testTwo:
+	classCards = json.dumps(response.body, indent=1, separators=(',', ': '))
+
+	classCardsDict = json.loads(classCards)
+
+	removeHeroes = list()
+
+	for x in classCardsDict:
 			if x['type'] != "Hero":
-				self.response.write('<img height="400" src=' + x['img'] + '>\n')
+				removeHeroes.append(x)
 
-		# These code snippets use an open-source library. http://unirest.io/python
-		response2 = unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/types/Minion?collectible=1",
-		  headers={
-		    "X-Mashape-Key": "HFXwiln4KJmshs6B1jOMfsA75kg3p1Jj1qOjsntjBvnGaWzx1v"
-		  }
-		)
+	response2 = unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/types/Minion?collectible=1",
+	  headers={
+	    "X-Mashape-Key": "HFXwiln4KJmshs6B1jOMfsA75kg3p1Jj1qOjsntjBvnGaWzx1v"
+	  }
+	)
 
-		test2 = json.dumps(response2.body, indent=1, separators=(',', ': '))
+	minionCards = json.dumps(response2.body, indent=1, separators=(',', ': '))
 
-		testTwo2 = json.loads(test2)
+	minionCardsDict = json.loads(minionCards)
 
-		self.response.write('<p>Neutral Cards: </p>\n')
+	neutralCardsDict = list()
 
-		for y in testTwo2:
+	for y in minionCardsDict:
 			if 'playerClass' not in y:
-				self.response.write('<img height="400" src=' + y['img'] + '>\n')
+				neutralCardsDict.append(y)
 
-		self.response.write('</body>\n</html>')
+	collection = removeHeroes + neutralCardsDict
 
+	return collection
+
+###############################################################################
+# Returns only collectible class cards for a given class
+###############################################################################
+def get_class_cards(player_class):
+	response = unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/classes/" + player_class + "?collectible=1", 
+		headers={
+			"X-Mashape-Key": "HFXwiln4KJmshs6B1jOMfsA75kg3p1Jj1qOjsntjBvnGaWzx1v"
+		}
+	)
+
+	classCards = json.dumps(response.body, indent=1, separators=(',', ': '))
+
+	classCardsDict = json.loads(classCards)
+
+	removeHeroes = list()
+
+	for x in classCardsDict:
+			if x['type'] != "Hero":
+				removeHeroes.append(x)
+
+	return removeHeroes
+
+###############################################################################
+# Returns all neutral collectible cards
+###############################################################################
+def get_neutral_cards():
+
+	response2 = unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/types/Minion?collectible=1",
+	  headers={
+	    "X-Mashape-Key": "HFXwiln4KJmshs6B1jOMfsA75kg3p1Jj1qOjsntjBvnGaWzx1v"
+	  }
+	)
+
+	minionCards = json.dumps(response2.body, indent=1, separators=(',', ': '))
+
+	minionCardsDict = json.loads(minionCards)
+
+	neutralCardsDict = list()
+
+	for y in minionCardsDict:
+			if 'playerClass' not in y:
+				neutralCardsDict.append(y)
+
+	return neutralCardsDict
+
+###############################################################################
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/cardlist', CardList)
+    ('/deckbuilder', DeckBuilder)
 ], debug=True)
 
-def main():
-    application.run()
-
-if __name__ == "__main__":
-    main()

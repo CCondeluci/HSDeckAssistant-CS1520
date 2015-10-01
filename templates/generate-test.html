@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+{% block content %}
+
+		<h1>CLASS CARD LIST GENERATOR TEST</h1>
+		<br>
+		<p>Please select your class: </p>
+		<br>
+		<form action="/cardlist" method="post">
+        	<select name="class_select">
+        		<option value="Druid">Druid</option>
+        		<option value="Hunter">Hunter</option>
+        		<option value="Mage">Mage</option>
+        		<option value="Paladin">Paladin</option>
+        		<option value="Priest">Priest</option>
+        		<option value="Rogue">Rogue</option>
+        		<option value="Shaman">Shaman</option>
+        		<option value="Warlock">Warlock</option>
+        		<option value="Warrior">Warrior</option>
+        	</select>
+
+			<input type="submit" value="Get Card List">
+		</form>
+
+{% endblock %}
+

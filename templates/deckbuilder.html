@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+{% block content %}
+
+<div id="decklist">
+	<ul>
+		<li>card 1</li>
+		<li>card 2</li>
+		<li>etc...</li>
+	</ul>
+</div>
+
+<div id="deckbuilder">
+	<div id="object" class="slideLeft">
+		{% for ccard in class_cards %}
+		<a title="{{ccard.name}}" href="#">
+			<img class="builder_card" height="45%" src="{{ccard.img}}">
+		</a>
+		{% endfor %}
+	</div>
+	<hr>
+	<div id="object" class="slideLeft">
+		{% for ncard in neutral_cards %}
+		<a title="{{ncard.name}}" href="#">
+			<img class="builder_card" height="45%" src="{{ncard.img}}">
+		</a>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

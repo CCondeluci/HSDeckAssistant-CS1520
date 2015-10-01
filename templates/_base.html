@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>HS Deck Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/animations.css">
+
+    <!-- import bootstrap files -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+	<!-- Navigation Bar -->
+	<nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+    	<div class="container-fluid">
+
+	        <!-- Brand -->
+	        <div class="navbar-header">
+	            <a href="#" class="navbar-brand">
+	            	<img alt="Brand" height="25" src="/static/assets/logo.png">
+	            </a>
+	        </div>
+
+	        <!-- Collection of nav links and other content for toggling -->
+	        <div class="navbar-inner container-fluid">
+	            <ul class="nav navbar-nav">
+	                <li>
+	                	<a href="/">Home</a>
+	                </li>
+	                <li class="dropdown">
+	                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Class <b class="caret"></b></a>
+	                    <ul role="menu" class="dropdown-menu">
+	                        <li><a href="/deckbuilder?class=Druid">Druid</a></li>
+	                        <li><a href="/deckbuilder?class=Hunter">Hunter</a></li>
+	                        <li><a href="/deckbuilder?class=Mage">Mage</a></li>
+	                        <li><a href="/deckbuilder?class=Paladin">Paladin</a></li>
+	                        <li><a href="/deckbuilder?class=Priest">Priest</a></li>
+	                        <li><a href="/deckbuilder?class=Rogue">Rogue</a></li>
+	                        <li><a href="/deckbuilder?class=Shaman">Shaman</a></li>
+	                        <li><a href="/deckbuilder?class=Warlock">Warlock</a></li>
+	                        <li><a href="/deckbuilder?class=Warrior">Warrior</a></li>
+	                    </ul>
+	                </li>
+	            </ul>
+	            <ul class="nav navbar-nav navbar-right">
+	            	{% if user_email %}
+	                <li><a href="{{ logout_url }}">Log Out</a></li>
+	            	{% else %}
+	            	<li><a href="{{ login_url }}">Login</a></li>
+	            	{% endif %}
+	            </ul>
+	        </div>
+    	</div>
+	</nav>
+
+  </head>
+
+  <body>
+
+	{% block content %}
+	{% endblock %}
+
+  </body>  
+
+
+
+</html>
