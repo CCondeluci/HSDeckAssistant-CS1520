@@ -2,29 +2,197 @@
 {% block content %}
 
 <div id="decklist">
-	<ul>
-		<li>card 1</li>
-		<li>card 2</li>
-		<li>etc...</li>
+	<p id="cardcounter">0 / 30</p>
+	<ul id='inner_list'>
+		
 	</ul>
+	<p id="clearexport">
+		<button type="button" onclick="resetDeck()">Reset</button>.........
+		<button type="button">Export</button>
+	</p>
 </div>
 
 <div id="deckbuilder">
 	<div id="object" class="slideLeft">
 		{% for ccard in class_cards %}
-		<a title="{{ccard.name}}" href="#">
-			<img class="builder_card" height="45%" src="{{ccard.img}}">
+		<a title="{{ccard.name}}" 
+			href="#" 
+			onclick="addCard(this); return false;" 
+			imgurl="{{ccard.img}}"
+			cardId="{{ccard.cardId}}"
+			cardSet="{{ccard.cardSet}}"
+			type="{{ccard.type}}"
+			rarity="{{ccard.rarity}}"
+			cost="{{ccard.cost}}"
+			attack="{{ccard.attack}}"
+			health="{{ccard.health}}"
+			cardtext="{{ccard.text}}"
+			flavor="{{ccard.flavor}}"
+			artist="{{ccard.artist}}"
+		>
+			<img class="builder_card" height="303" width="200" src="{{ccard.img}}">
 		</a>
 		{% endfor %}
 	</div>
 	<hr>
 	<div id="object" class="slideLeft">
 		{% for ncard in neutral_cards %}
-		<a title="{{ncard.name}}" href="#">
-			<img class="builder_card" height="45%" src="{{ncard.img}}">
+		<a title="{{ncard.name}}" 
+			href="#" 
+			onclick="addCard(this)" 
+			imgurl="{{ncard.img}}"
+			cardId="{{ncard.cardId}}"
+			cardSet="{{ncard.cardSet}}"
+			type="{{ncard.type}}"
+			rarity="{{ncard.rarity}}"
+			cost="{{ncard.cost}}"
+			attack="{{ncard.attack}}"
+			health="{{ncard.health}}"
+			cardtext="{{ncard.text}}"
+			flavor="{{ncard.flavor}}"
+			artist="{{ncard.artist}}"
+		>
+			<img class="builder_card" height="303" width="200" src="{{ncard.img}}">
 		</a>
 		{% endfor %}
 	</div>
 </div>
+
+<script type="text/javascript">
+
+	// load xml file
+    if (window.XMLHttpRequest) {
+       xhttp = new XMLHttpRequest();
+    } else {    // IE 5/6
+       xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xhttp.open("GET", "/static/CARD.xml", false);
+    xhttp.send();
+    xmlDoc = xhttp.responseXML;
+
+	
+	var deck_list = {
+		list: [],
+		decksize: 0
+	};
+
+	var d_card = {
+
+		cardName: "",
+		count: 0,
+		rarity: 0,
+		cardId: "",
+		imgurl: ""
+	};
+
+	function make_dcard(card) {
+
+		var new_dcard = new Object();
+		new_dcard.cardName = card.title;
+		new_dcard.count = 1;
+		new_dcard.rarity = card.getAttribute('rarity');
+		new_dcard.cardId = card.getAttribute('cardId');
+		new_dcard.imgurl = card.getAttribute('imgurl');
+
+		return new_dcard;
+	}
+
+
+	function addCard(card) {
+
+		var main_list = document.getElementById('inner_list');
+		var current_dcard = make_dcard(card);
+		var index = deck_list.list.map(function(e) { return e.cardName; }).indexOf(current_dcard.cardName);
+
+		//alert(index);
+
+		if( index == -1 && deck_list.decksize < 30){
+			deck_list.list.push(current_dcard);
+			deck_list.decksize++;
+		}
+		else if (index >= 0 && deck_list.list[index].count < 2 && deck_list.decksize < 30) {
+			deck_list.list[index].count += 1;
+			current_dcard = deck_list.list[index];
+			deck_list.decksize++;
+		}
+		else {
+			current_dcard = deck_list.list[index];
+		}
+
+		//alert(JSON.stringify(deck_list));
+		var existCheck = document.getElementById(current_dcard.cardId);
+
+		if( existCheck == null ){
+
+
+		    // alert(testxml);
+		    var path_drill = '//Card[api_id = \'' + current_dcard.cardId + '\']/hearthhead_id';
+			var hheadID_url = xmlDoc.evaluate(path_drill, xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue;
+
+			var firstAdd = document.createElement('li');
+			firstAdd.setAttribute('id', current_dcard.cardId);
+			firstAdd.setAttribute('onclick', 'removeCard(this)');
+			firstAdd.setAttribute('class', current_dcard.rarity);
+			firstAdd.innerHTML += "<a onclick=\"return false;\" id=\"tooltip-container\" href=\"http://www.hearthhead.com/card=" + hheadID_url +
+
+				"&text\"><div class=\"deckcardimage\" style=\"background-image: url('" + card.getAttribute('imgurl') + "');\"></div>" + "<div class=\"content\"> <div class=\"mana\">" + card.getAttribute('cost') + "</div><div class=\"deckcardname\">" + card.getAttribute('title') + "</div><div class=\"spacer\"></div><div class=\"cardcount\">" + current_dcard.count + "</div>\n</div>\n</a>";
+
+			main_list.appendChild(firstAdd);
+		}
+		else {
+			var card_count = document.getElementById(current_dcard.cardId).childNodes[0].childNodes[1].childNodes[4];
+
+			if( current_dcard.count <= 2 && current_dcard.rarity != "Legendary" ){
+				card_count.innerHTML = current_dcard.count;
+			}
+		}
+
+		checkDeckSize();
+		return false;
+	}
+
+	function removeCard(card) {
+
+		var main_list = document.getElementById('inner_list');
+		var card_id = document.getElementById(card.getAttribute('id'));
+		var card_count = card_id.childNodes[0].childNodes[1].childNodes[4];
+
+		var index = deck_list.list.map(function(e) { return e.cardId; }).indexOf(card.getAttribute('id'));
+
+		if( card_count.innerHTML == 2 ){
+			deck_list.list[index].count = 1;
+			card_count.innerHTML = 1;
+			deck_list.decksize--;
+		}
+		else {
+			deck_list.list.splice(index, 1);
+			main_list.removeChild(card_id);
+			deck_list.decksize--;
+		}
+
+		checkDeckSize();
+	}
+
+	function checkDeckSize() {
+		// body...
+		var viewsize = document.getElementById('cardcounter');
+		viewsize.innerHTML = deck_list.decksize + " / 30";
+	}
+
+	function resetDeck() {
+		var main_list = document.getElementById('inner_list');
+		main_list.innerHTML = '';
+
+		deck_list = {
+			list: [],
+			decksize: 0
+		};
+
+		checkDeckSize();
+	}
+
+</script>
+
 
 {% endblock %}

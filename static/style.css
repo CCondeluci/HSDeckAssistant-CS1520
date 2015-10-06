@@ -1,3 +1,8 @@
+#tooltip-container {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
 h1 {
   font-family: Helvetica;
   font-size: 50pt !important;
@@ -36,20 +41,219 @@ table {
 
 ul {
   list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
+li {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 0px !important;
+}
+
+section {
+  display: block;
+}
+
+#cardcounter {
+  font-family: 'Source Sans Pro','Open Sans','Helvetica','Arial',sans-serif;
+  font-size: 20px;
+  background-color: #000000;
+  text-align: center;
+  color: #FFF;
+}
+
+#cardcounter p {
+    display: block;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    margin-bottom: 0px;
+    height: 30px;
+}
+
+#clearexport {
+  font-family: 'Source Sans Pro','Open Sans','Helvetica','Arial',sans-serif;
+  background-color: #000000;
+  color: transparent;
+}
+
+#clearexport button {
+  text-shadow: 2px 2px 5px #000000;
+  color: #ffffff;
+  font-size: 15px;
+  background: #ebb000;
+  padding: 0px 10px 0px 10px;
+  text-decoration: none;
+}
+
+#clearexport button:hover {
+  background: #ffcc00;
+  text-decoration: none;
+}
 #decklist {
   line-height: 30px;
-  width: 15%;
+  width: 240px;
   height: 100%;
   float:left;
-  padding:5px;
   background-color: #eeeeee;
+  font-family: 'Source Sans Pro','Open Sans','Helvetica','Arial',sans-serif;
+  font-size: 13px;
+}
+
+#decklist ul {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 0px;
+}
+
+#decklist li {
+  display: block;
+  animation: rotateIn 1s;
+}
+
+.rotateIn{
+  animation-name: rotateIn;
+  -webkit-animation-name: rotateIn; 
+
+  animation-duration: 1s; 
+  -webkit-animation-duration: 1s;
+
+  animation-iteration-count: ease-in-out;
+  -webkit-animation-iteration-count: ease-in-out;
+}
+
+@keyframes rotateIn {
+  0% {
+    transform: perspective(1000px) rotateX(90deg);
+    opacity: 1;   
+  }
+  100% {
+    transform: perspective(1000px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes rotateIn {
+  0% {
+    -webkit-transform: perspective(1000px) rotateX(90deg);
+    opacity: 1;   
+  }
+  100% {
+    -webkit-transform: perspective(1000px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+#decklist li.free {
+  color: #fff !important;
+}
+
+#decklist li.Common {
+  color: #fff !important;
+}
+
+#decklist li.Rare {
+  color: #0070dd !important;
+}
+
+#decklist li.Epic {
+  color: #a335ee !important;
+}
+
+#decklist li.Legendary {
+  color: #ff8000 !important;
+}
+
+#decklist .deckcardimage {
+  background-position: 20% 25%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 30px;
+  width: 240px;
+  position: absolute;
+}
+
+#decklist .deckcardimage:before {
+    content: " ";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: -webkit-gradient(linear, 0% 0%, 100% 0%,color-stop(0.244, rgb(0, 0, 0)),color-stop(1, rgba(0, 0, 0, 0.09)));
+}
+
+#decklist .content {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: nowrap;
+  flex-flow: nowrap;
+}
+
+#decklist .mana {
+  background: #15a;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #fff;
+  text-align: center;
+  width: 30px;
+  position: relative;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+#decklist .deckcardname {
+    overflow: hidden;
+    padding: 0 10px;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    -webkit-flex: 0 0 auto;
+    flex: 0 0 auto;
+}
+
+#decklist .spacer {
+    overflow: hidden;
+    color: #FFF
+    padding: 0 10px;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    -webkit-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+
+#decklist .cardcount {
+    background: #333;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #ffd700;
+    min-width: 30px;
+    padding: 0 10px;
+    text-align: center;
+    position: relative;
+    -webkit-flex: 0 0 auto;
+    flex: 0 0 auto;
 }
 
 #deckbuilder {
-  width: 85%;
-  float: left;
+  width: auto;
   padding: 10px;
   height: 100%;
   overflow-y: scroll;
@@ -155,3 +359,215 @@ a.hovertext_card:after {
 a.hovertext_card:hover:after, a.hovertext:focus:after {
     opacity: 1.0;
 }
+
+/**
+ * Tooltip Styles
+ */
+
+/* Base styles for the element that has a tooltip */
+[data-tooltip],
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Base styles for the entire tooltip */
+[data-tooltip]:before,
+[data-tooltip]:after,
+.tooltip:before,
+.tooltip:after {
+  position: absolute;
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -webkit-transition: 
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out,
+    -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  -moz-transition:    
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out,
+    -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  transition:         
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out,
+    transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform:    translate3d(0, 0, 0);
+  transform:         translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+/* Show the entire tooltip on hover and focus */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after,
+[data-tooltip]:focus:before,
+[data-tooltip]:focus:after,
+.tooltip:hover:before,
+.tooltip:hover:after,
+.tooltip:focus:before,
+.tooltip:focus:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+/* Base styles for the tooltip's directional arrow */
+.tooltip:before,
+[data-tooltip]:before {
+  z-index: 1001;
+  border: 6px solid transparent;
+  background: transparent;
+  content: "";
+}
+
+/* Base styles for the tooltip's content area */
+.tooltip:after,
+[data-tooltip]:after {
+  z-index: 1000;
+  padding: 8px;
+  width: 160px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+  content: attr(data-tooltip);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* Directions */
+
+/* Top (default) */
+[data-tooltip]:before,
+[data-tooltip]:after,
+.tooltip:before,
+.tooltip:after,
+.tooltip-top:before,
+.tooltip-top:after {
+  bottom: 100%;
+  left: 50%;
+}
+
+[data-tooltip]:before,
+.tooltip:before,
+.tooltip-top:before {
+  margin-left: -6px;
+  margin-bottom: -12px;
+  border-top-color: #000;
+  border-top-color: hsla(0, 0%, 20%, 0.9);
+}
+
+/* Horizontally align top/bottom tooltips */
+[data-tooltip]:after,
+.tooltip:after,
+.tooltip-top:after {
+  margin-left: -80px;
+}
+
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after,
+[data-tooltip]:focus:before,
+[data-tooltip]:focus:after,
+.tooltip:hover:before,
+.tooltip:hover:after,
+.tooltip:focus:before,
+.tooltip:focus:after,
+.tooltip-top:hover:before,
+.tooltip-top:hover:after,
+.tooltip-top:focus:before,
+.tooltip-top:focus:after {
+  -webkit-transform: translateY(-12px);
+  -moz-transform:    translateY(-12px);
+  transform:         translateY(-12px); 
+}
+
+/* Left */
+.tooltip-left:before,
+.tooltip-left:after {
+  right: 100%;
+  bottom: 50%;
+  left: auto;
+}
+
+.tooltip-left:before {
+  margin-left: 0;
+  margin-right: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-left-color: #000;
+  border-left-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.tooltip-left:hover:before,
+.tooltip-left:hover:after,
+.tooltip-left:focus:before,
+.tooltip-left:focus:after {
+  -webkit-transform: translateX(-12px);
+  -moz-transform:    translateX(-12px);
+  transform:         translateX(-12px); 
+}
+
+/* Bottom */
+.tooltip-bottom:before,
+.tooltip-bottom:after {
+  top: 100%;
+  bottom: auto;
+  left: 50%;
+}
+
+.tooltip-bottom:before {
+  margin-top: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-bottom-color: #000;
+  border-bottom-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.tooltip-bottom:hover:before,
+.tooltip-bottom:hover:after,
+.tooltip-bottom:focus:before,
+.tooltip-bottom:focus:after {
+  -webkit-transform: translateY(12px);
+  -moz-transform:    translateY(12px);
+  transform:         translateY(12px); 
+}
+
+/* Right */
+.tooltip-right:before,
+.tooltip-right:after {
+  bottom: 50%;
+  left: 100%;
+}
+
+.tooltip-right:before {
+  margin-bottom: 0;
+  margin-left: -12px;
+  border-top-color: transparent;
+  border-right-color: #000;
+  border-right-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.tooltip-right:hover:before,
+.tooltip-right:hover:after,
+.tooltip-right:focus:before,
+.tooltip-right:focus:after {
+  -webkit-transform: translateX(12px);
+  -moz-transform:    translateX(12px);
+  transform:         translateX(12px); 
+}
+
+/* Move directional arrows down a bit for left/right tooltips */
+.tooltip-left:before,
+.tooltip-right:before {
+  top: 3px;
+}
+
+/* Vertically center tooltip content for left/right tooltips */
+.tooltip-left:after,
+.tooltip-right:after {
+  margin-left: 0;
+  margin-bottom: -16px;
+}
+
