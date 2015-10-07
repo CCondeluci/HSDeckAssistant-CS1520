@@ -1,63 +1,78 @@
 {% extends "_base.html" %}
 {% block content %}
 
-	<h1>Select Your Class</h1>
-	<br>
-	<div id="object" class="bigEntrance">
-		<table align="center" cellspacing="10" style="border-collapse: separate; border-spacing: 10px;">
-			<tr>
-				<td class="hero_portrait">
-					<a class="hovertext" title="Druid" href="/deckbuilder?class=Druid">
-						<img width="200" src="/static/assets/heroes/druid.png">
-					</a>
-				</td>
-				<td class="hero_portrait">
-					<a class="hovertext" title="Hunter" href="/deckbuilder?class=Hunter">
-						<img width="200" src="/static/assets/heroes/hunter.png">
-					</a>
-				</td>
-				<td class="hero_portrait">
-					<a class="hovertext" title="Mage" href="/deckbuilder?class=Mage">
-						<img width="200" src="/static/assets/heroes/mage.png">
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td class="hero_portrait">
-					<a class="hovertext" title="Paladin" href="/deckbuilder?class=Paladin">
-						<img width="200" src="/static/assets/heroes/paladin.png">
-					</a>
-				</td>
-				<td class="hero_portrait">
-					<a class="hovertext" title="Priest" href="/deckbuilder?class=Priest">
-						<img width="200" src="/static/assets/heroes/priest.png">
-					</a>
-				</td>
-				<td class="hero_portrait">
-					<a class="hovertext" title="Rogue" href="/deckbuilder?class=Rogue">
-						<img width="200" src="/static/assets/heroes/rogue.png">
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td class="hero_portrait">
-					<a class="hovertext" title="Shaman" href="/deckbuilder?class=Shaman">
-						<img width="200" src="/static/assets/heroes/shaman.png">
-					</a>
-				</td>
-				<td class="hero_portrait">
-					<a class="hovertext" title="Warlock" href="/deckbuilder?class=Warlock">
-						<img width="200" src="/static/assets/heroes/warlock.png">
-					</a>
-				</td>
-				<td class="hero_portrait">
-					<a  class="hovertext" title="Warrior" href="/deckbuilder?class=Warrior">
-						<img width="200" src="/static/assets/heroes/warrior.png">
-					</a>
-				</td>
-			</tr>
-		</table>
+	<div class="background-image-index"></div>
+	<div class="index-content">
+		<h1>Select Your Class</h1>
+		<br>
+		<div id="object" class="bigEntrance">
+			<table align="center" cellspacing="10" style="border-collapse: separate; border-spacing: 10px;">
+				<tr>
+					<td class="hero_portrait">
+						<a class="hovertext" title="Druid" href="/deckbuilder?class=Druid">
+							<img width="200" src="/static/assets/heroes/druid.png">
+						</a>
+					</td>
+					<td class="hero_portrait">
+						<a class="hovertext" title="Hunter" href="/deckbuilder?class=Hunter">
+							<img width="200" src="/static/assets/heroes/hunter.png">
+						</a>
+					</td>
+					<td class="hero_portrait">
+						<a class="hovertext" title="Mage" href="/deckbuilder?class=Mage">
+							<img width="200" src="/static/assets/heroes/mage.png">
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="hero_portrait">
+						<a class="hovertext" title="Paladin" href="/deckbuilder?class=Paladin">
+							<img width="200" src="/static/assets/heroes/paladin.png">
+						</a>
+					</td>
+					<td class="hero_portrait">
+						<a class="hovertext" title="Priest" href="/deckbuilder?class=Priest">
+							<img width="200" src="/static/assets/heroes/priest.png">
+						</a>
+					</td>
+					<td class="hero_portrait">
+						<a class="hovertext" title="Rogue" href="/deckbuilder?class=Rogue">
+							<img width="200" src="/static/assets/heroes/rogue.png">
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="hero_portrait">
+						<a class="hovertext" title="Shaman" href="/deckbuilder?class=Shaman">
+							<img width="200" src="/static/assets/heroes/shaman.png">
+						</a>
+					</td>
+					<td class="hero_portrait">
+						<a class="hovertext" title="Warlock" href="/deckbuilder?class=Warlock">
+							<img width="200" src="/static/assets/heroes/warlock.png">
+						</a>
+					</td>
+					<td class="hero_portrait">
+						<a  class="hovertext" title="Warrior" href="/deckbuilder?class=Warrior">
+							<img width="200" src="/static/assets/heroes/warrior.png">
+						</a>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 
+	<script type="text/javascript">
+
+		$(function(){
+
+		  $(".hovertext").click(function(){
+		    $('body').prepend("<div class=\"loader\"></div>").fadeIn();  
+		      //return false;  // comment out this to for the link to work
+		  });
+
+		});
+
+	</script>
 {% endblock %}
 

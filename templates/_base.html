@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="http://static.wowhead.com/widgets/power.js"></script><script>var wowhead_tooltips = { "colorlinks": false, "iconizelinks": true, "renamelinks": true }</script>
+	<script type="text/javascript" src="http://static.wowhead.com/widgets/power.js"></script><script>var wowhead_tooltips = { "colorlinks": false, "iconizelinks": true, "renamelinks": false }</script>
 
 	<link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/animations.css">
@@ -33,15 +33,15 @@
 	                <li class="dropdown">
 	                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Class <b class="caret"></b></a>
 	                    <ul role="menu" class="dropdown-menu">
-	                        <li><a href="/deckbuilder?class=Druid">Druid</a></li>
-	                        <li><a href="/deckbuilder?class=Hunter">Hunter</a></li>
-	                        <li><a href="/deckbuilder?class=Mage">Mage</a></li>
-	                        <li><a href="/deckbuilder?class=Paladin">Paladin</a></li>
-	                        <li><a href="/deckbuilder?class=Priest">Priest</a></li>
-	                        <li><a href="/deckbuilder?class=Rogue">Rogue</a></li>
-	                        <li><a href="/deckbuilder?class=Shaman">Shaman</a></li>
-	                        <li><a href="/deckbuilder?class=Warlock">Warlock</a></li>
-	                        <li><a href="/deckbuilder?class=Warrior">Warrior</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Druid">Druid</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Hunter">Hunter</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Mage">Mage</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Paladin">Paladin</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Priest">Priest</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Rogue">Rogue</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Shaman">Shaman</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Warlock">Warlock</a></li>
+	                        <li><a class='barclass' href="/deckbuilder?class=Warrior">Warrior</a></li>
 	                    </ul>
 	                </li>
 	            </ul>
@@ -65,6 +65,17 @@
 
   </body>  
 
+  	<script type="text/javascript">
 
+		$(function(){
+
+		  $(".barclass").click(function(){
+		    $('body').prepend("<div class=\"loader\"></div>").fadeIn();  
+		      //return false;  // comment out this to for the link to work
+		  });
+
+		});
+
+	</script>
 
 </html>
