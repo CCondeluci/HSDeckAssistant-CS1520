@@ -1,25 +1,27 @@
 {% extends "_base.html" %}
 {% block content %}
 
-<div class="loader"></div>
-
 <div id="decklist">
-	<p id="cardcounter">0 / 30</p>
-	<ul id='inner_list'>
-		<li></li>
-	</ul>
-	<p id="dustcounter">0 Dust to Craft</p>
-	<p id="clearexport">
-		<button type="button" onclick="resetDeck()">Reset</button>.........
-		<button type="button" onclick="exportDeck(500, 500)">Export</button>
-	</p>
+	<form method="post">
+		<input id="deck_name_box" type="text" name="deckname" value="Enter Deck Name Here...">
+		<p id="cardcounter">0 / 30</p>
+		<ul id='inner_list'>
+			<li></li>
+		</ul>
+		<p id="dustcounter">0 Dust to Craft</p>
+		<p id="clearexport">
+			<button type="button" onclick="resetDeck()">Reset</button>
+			<button type="button" onclick="exportDeck(500, 500)" data-toggle="modal" data-target="#exportPopup">Export</button>
+			<button type="submit">Save</button>
+		</p>
+	</form>
 </div>
 
 <div id="deckbuilder">
 	<div id="object" class="slideLeft">
 		{% for ccard in class_cards %}
 		<a cardName="{{ccard.name}}" 
-			href="http://www.hearthhead.com/card={{ccard.hheadId}}&text" 
+			href="#" 
 			onclick="addCard(this); return false;" 
 			imgurl="{{ccard.img}}"
 			cardId="{{ccard.cardId}}"
@@ -41,7 +43,7 @@
 	<div id="object" class="slideLeft">
 		{% for ncard in neutral_cards %}
 		<a cardName="{{ncard.name}}" 
-			href="http://www.hearthhead.com/card={{ncard.hheadId}}&text" 
+			href="#" 
 			onclick="addCard(this); return false;" 
 			imgurl="{{ncard.img}}"
 			cardId="{{ncard.cardId}}"
@@ -60,6 +62,26 @@
 		{% endfor %}
 	</div>
 </div>
+
+<!-- Modal -->
+  <div class="modal fade" id="exportPopup" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Decklist Export</h4>
+        </div>
+        <div class="modal-body" id="deckbody">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
 <script type="text/javascript" src="/static/js/deckbuilder.js"></script>
 

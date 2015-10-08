@@ -1,12 +1,22 @@
+// Main Deckbuilder Javascript
 
-$(window).load(function() {
-	$(".loader").fadeOut("slow");
-})
+// Load XML Mapping for tooltips
+if (window.XMLHttpRequest) {
+   xhttp = new XMLHttpRequest();
+} else {    // IE 5/6
+   xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+}
 
+xhttp.open("GET", "/static/CARD.xml", false);
+xhttp.send();
+xmlDoc = xhttp.responseXML;
+
+// "Define" objects that will be used in functions
 var deck_list = {
 	list: [],
 	decksize: 0,
-	dustcost: 0
+	dustcost: 0,
+	deckname: ""
 };
 
 var d_card = {
@@ -20,6 +30,7 @@ var d_card = {
 	mana: 0
 };
 
+//constructor for a card in a decklist
 function make_dcard(card) {
 
 	var new_dcard = new Object();
@@ -34,7 +45,7 @@ function make_dcard(card) {
 	return new_dcard;
 }
 
-
+//Add card to the decklist, both visually and on backend
 function addCard(card) {
 
 	sortDeckList();
@@ -63,25 +74,15 @@ function addCard(card) {
 	sortDeckList();
 	index = deck_list.list.map(function(e) { return e.cardName; }).indexOf(current_dcard.cardName);
 
-	//alert(JSON.stringify(deck_list));
 	var existCheck = document.getElementById(current_dcard.cardId);
 
+    
 	if( existCheck == null ){
 
-	    // alert(testxml);
-	    var path_drill = '//Card[api_id = \'' + current_dcard.cardId + '\']/hearthhead_id';
-		var hheadID_url = card.getAttribute('href');
+	 	var path_drill = '//Card[a = \'' + current_dcard.cardId + '\']/h';
+		var hheadID_url = xmlDoc.evaluate(path_drill, xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue;
 
-		// var firstAdd = document.createElement('li');
-		// firstAdd.setAttribute('id', current_dcard.cardId);
-		// firstAdd.setAttribute('onclick', 'removeCard(this)');
-		// firstAdd.setAttribute('class', current_dcard.rarity);
-		// firstAdd.innerHTML += "<a onclick=\"return false;\" id=\"tooltip-container\" href=\"" + hheadID_url +"\"><div class=\"deckcardimage\" style=\"background-image: url('" + card.getAttribute('imgurl') + "');\"></div>" + "<div class=\"content\"> <div class=\"mana\">" + current_dcard.mana + "</div><div class=\"deckcardname\">" + current_dcard.cardName + "</div><div class=\"spacer\"></div><div class=\"cardcount\">" + current_dcard.count + "</div>\n</div>\n</a>";
-
-		// main_list.appendChild(firstAdd);
-
-		//alert(index);
-		$("#inner_list li").eq(index).after("<li id=\"" + current_dcard.cardId + "\" onclick=\"removeCard(this)\" class=\"" + current_dcard.rarity + "\"><a onclick=\"return false;\" id=\"tooltip-container\" href=\"" + hheadID_url +"\"><div class=\"deckcardimage\" style=\"background-image: url('" + card.getAttribute('imgurl') + "');\"></div>" + "<div class=\"content\"> <div class=\"mana\">" + current_dcard.mana + "</div><div class=\"deckcardname\">" + current_dcard.cardName + "</div><div class=\"spacer\"></div><div class=\"cardcount\">" + current_dcard.count + "</div>\n</div>\n</a></li>");
+		$("#inner_list li").eq(index).after("<li id=\"" + current_dcard.cardId + "\" onclick=\"removeCard(this)\" class=\"" + current_dcard.rarity + "\"><a onclick=\"return false;\" id=\"tooltip-container\" href=\"http://www.hearthhead.com/card=" + hheadID_url +"\"><div class=\"deckcardimage\" style=\"background-image: url('" + card.getAttribute('imgurl') + "');\"></div>" + "<div class=\"content\"> <div class=\"mana\">" + current_dcard.mana + "</div><div class=\"deckcardname\">" + current_dcard.cardName + "</div><div class=\"spacer\"></div><div class=\"cardcount\">" + current_dcard.count + "</div>\n</div>\n</a></li>");
 	}
 	else {
 		var card_count = document.getElementById(current_dcard.cardId).childNodes[0].childNodes[1].childNodes[4];
@@ -96,6 +97,7 @@ function addCard(card) {
 	return false;
 }
 
+//Remove a card from the decklist, both visually and on backend
 function removeCard(card) {
 
 	var main_list = document.getElementById('inner_list');
@@ -122,6 +124,7 @@ function removeCard(card) {
 	checkDeckCost();
 }
 
+//Get the dust cost of a card in the decklist
 function getCardDust (card) {
 	// body...
 	var dust = 0;
@@ -148,6 +151,7 @@ function getCardDust (card) {
 			dust = 0;
 	}
 
+	//Some cardsets have no cost regardless of rarity
 	if( card.cardSet == "Basic" )
 		dust = 0;
 	else if( card.cardSet == "Blackrock Mountain" )
@@ -158,18 +162,25 @@ function getCardDust (card) {
 	return dust;
 }
 
+//Updates deck size
 function checkDeckSize() {
 	// body...
 	var viewsize = document.getElementById('cardcounter');
 	viewsize.innerHTML = deck_list.decksize + " / 30";
+
+	//We're also going to do the name here as well
+	var temp_name = document.getElementById('deck_name_box').value;
+	deck_list.deckname = temp_name;
 }
 
+//Updates dust cost
 function checkDeckCost() {
 	// body...
 	var viewdust = document.getElementById('dustcounter');
 	viewdust.innerHTML = deck_list.dustcost + " Dust to Craft";
 }
 
+//Resets the decklist both visually and on the backend
 function resetDeck() {
 	var main_list = document.getElementById('inner_list');
 	main_list.innerHTML = '<li></li>';
@@ -177,7 +188,8 @@ function resetDeck() {
 	deck_list = {
 		list: [],
 		decksize: 0,
-		dustcost: 0
+		dustcost: 0,
+		deckname: ""
 	};
 
 	checkDeckSize();
@@ -185,6 +197,7 @@ function resetDeck() {
 	sortDeckList();
 }
 
+//Sort the backend decklist
 function sortDeckList() {
 	// body...
 
@@ -194,20 +207,22 @@ function sortDeckList() {
 	);
 }
 
+//Export a deck to Cockatrice format
 function exportDeck(w, h) {
 	sortDeckList();
-	var left = (screen.width/2)-(w/2);
-		var top = (screen.height/2)-(h/2);
-		var myWindow = window.open("", "Deck Export", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-	var printdeck = myWindow.document.createElement('textarea');
-	printdeck.setAttribute('rows', 30);
+	var bsPopup = document.getElementById('deckbody')
+	bsPopup.innerHTML = "";
+	var printdeck = document.createElement('textarea');
+	printdeck.setAttribute('rows', 50);
 	printdeck.setAttribute('cols', 50);
+	printdeck.setAttribute('class', 'exportArea');
 
 	templist = deck_list.list;
+	bsPopup.innerHTML = "<p>" + deck_list.deckname + "</p>";
 
 	for( var x = 0; x < templist.length; x++ ) {
 		printdeck.innerHTML += templist[x].count + " " + templist[x].cardName + "\n";
 	}
 
-	myWindow.document.body.appendChild(printdeck);
+	bsPopup.appendChild(printdeck);
 }

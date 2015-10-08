@@ -4,7 +4,6 @@ import sys
 import os
 import json
 import logging
-import xml.etree.cElementTree as ET
 
 if 'lib' not in sys.path:
     sys.path[0:0] = ['lib']
@@ -21,8 +20,6 @@ from google.appengine.ext.webapp import blobstore_handlers
 ###############################################################################
 # Global variables
 ###############################################################################
-xmldoc = ET.parse('card-mapping.xml')
-root = xmldoc.getroot()
 
 ###############################################################################
 # We'll just use this convenience function to retrieve and render a template.
@@ -53,6 +50,19 @@ class MainHandler(webapp2.RequestHandler):
    		}
 
     	render_template(self, 'index.html', page_params)
+
+###############################################################################
+class MyDecklistsHandler(webapp2.RequestHandler):
+    def get(self):
+    	email = get_user_email()
+
+    	page_params = {
+    		'user_email': email,
+     		'login_url': users.create_login_url(),
+     		'logout_url': users.create_logout_url('/')
+   		}
+
+    	render_template(self, 'mydecklists.html', page_params)
 
 ###############################################################################
 class DeckBuilder(webapp2.RequestHandler):
@@ -130,7 +140,6 @@ def get_class_cards(player_class):
 
 	for x in classCardsDict:
 			if x['type'] != "Hero":
-				x['hheadId'] = get_hhead_id(x)
 				removeHeroes.append(x)
 
 	return removeHeroes
@@ -154,24 +163,14 @@ def get_neutral_cards():
 
 	for y in minionCardsDict:
 			if 'playerClass' not in y:
-				y['hheadId'] = get_hhead_id(y)
 				neutralCardsDict.append(y)
 
 	return neutralCardsDict
 
 ###############################################################################
-# gets the hearthhead id for a card (for the tooltip)
-###############################################################################
-def get_hhead_id(card):
-
-	xpathString = ".//Card[api_id=\'" + card['cardId'] + "\']/hearthhead_id"
-	result = root.find(xpathString)
-	new_id = result.text
-	return new_id
-
-###############################################################################
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/deckbuilder', DeckBuilder)
+    ('/deckbuilder', DeckBuilder),
+    ('/mydecklists', MyDecklistsHandler)
 ], debug=True)
 
