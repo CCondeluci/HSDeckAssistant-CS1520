@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+{% block content %}
+
+<div class="container">
+	<br>
+	<div class="row">
+		<div class="col-md-4">
+			<div id="decklist" style="background-color:transparent;">
+				<ul id='inner_list'>
+					{% for card in cardlist %}
+						<li id="{{card.cardId}}" class="{{card.rarity}}">
+							<a onclick="return false;" id="tooltip-container" href="http://www.hearthhead.com/card={{card.hheadID}}">
+								<div class="deckcardimage" style="background-image: url('{{card.imgurl}}');"></div>
+								<div class="content">
+									<div class="mana">{{card.mana}}</div>
+									<div class="deckcardname">{{card.cardName}}</div>
+									<div class="spacer"></div>
+									<div class="cardcount">{{card.count}}</div>
+								</div>
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+				<p id="dustcounter">Dust Cost: {{deck.dustcost}}</p>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<h1>{{deck.name}}</h1>
+			<h2>{{deck.deck_class}}</h2>
+			<p>This is a basic test page to ensure contents of the deck are correctly stored and retrieved</p>
+			<p>A user written "deck explanation" would go here, and would just be HTML text</p>
+		</div>
+
+		
+	</div>
+</div>
+
+{% endblock %}

@@ -2,7 +2,7 @@
 {% block content %}
 
 <div id="decklist">
-	<form method="post">
+	<form id="decklist_saver_form" action="/mydecklists">
 		<input id="deck_name_box" type="text" name="deckname" value="Enter Deck Name Here...">
 		<p id="cardcounter">0 / 30</p>
 		<ul id='inner_list'>
@@ -12,7 +12,7 @@
 		<p id="clearexport">
 			<button type="button" onclick="resetDeck()">Reset</button>
 			<button type="button" onclick="exportDeck(500, 500)" data-toggle="modal" data-target="#exportPopup">Export</button>
-			<button type="submit">Save</button>
+			<button type="button" onclick="PrepareDeck()">Save</button>
 		</p>
 	</form>
 </div>

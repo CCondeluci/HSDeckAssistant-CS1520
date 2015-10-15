@@ -11,12 +11,20 @@ xhttp.open("GET", "/static/CARD.xml", false);
 xhttp.send();
 xmlDoc = xhttp.responseXML;
 
+$("form").keypress(function(e) {
+  //Enter key
+  if (e.which == 13) {
+    return false;
+  }
+});
+
 // "Define" objects that will be used in functions
 var deck_list = {
 	list: [],
 	decksize: 0,
 	dustcost: 0,
-	deckname: ""
+	deckname: "",
+	deck_class: ""
 };
 
 var d_card = {
@@ -27,8 +35,55 @@ var d_card = {
 	cardId: "",
 	imgurl: "",
 	cardSet: "",
-	mana: 0
+	mana: 0,
+	hheadID: ""
 };
+
+//Gets the class name
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  } 
+}
+
+//Sends ajax request that adds deck to ndb
+function PrepareDeck(){
+
+	sortDeckList();
+	checkDeckSize();
+	checkDeckCost();
+	
+	if(deck_list.decksize < 30){
+		alert("You cannot save a deck smaller than 30 cards!");
+		return false;
+	}
+	else if(deck_list.deckname == "Enter Deck Name Here..." || deck_list.deckname == ""){
+		alert("You cannot save a deck without a name!");
+		return false;
+	}
+	else {
+		deck_list.deck_class = getQueryVariable("class");
+
+		$test = JSON.stringify(deck_list);
+
+		$.ajax({
+
+			type: "POST",
+			url: "/savedeck",
+			data: {inputData: $test}
+
+		}).done(function(data){
+			console.log(data);
+		});
+
+		document.forms['decklist_saver_form'].submit();
+	}
+}
 
 //constructor for a card in a decklist
 function make_dcard(card) {
@@ -81,6 +136,7 @@ function addCard(card) {
 
 	 	var path_drill = '//Card[a = \'' + current_dcard.cardId + '\']/h';
 		var hheadID_url = xmlDoc.evaluate(path_drill, xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue;
+		current_dcard.hheadID = hheadID_url;
 
 		$("#inner_list li").eq(index).after("<li id=\"" + current_dcard.cardId + "\" onclick=\"removeCard(this)\" class=\"" + current_dcard.rarity + "\"><a onclick=\"return false;\" id=\"tooltip-container\" href=\"http://www.hearthhead.com/card=" + hheadID_url +"\"><div class=\"deckcardimage\" style=\"background-image: url('" + card.getAttribute('imgurl') + "');\"></div>" + "<div class=\"content\"> <div class=\"mana\">" + current_dcard.mana + "</div><div class=\"deckcardname\">" + current_dcard.cardName + "</div><div class=\"spacer\"></div><div class=\"cardcount\">" + current_dcard.count + "</div>\n</div>\n</a></li>");
 	}
@@ -209,6 +265,8 @@ function sortDeckList() {
 
 //Export a deck to Cockatrice format
 function exportDeck(w, h) {
+	checkDeckSize();
+	checkDeckCost();
 	sortDeckList();
 	var bsPopup = document.getElementById('deckbody')
 	bsPopup.innerHTML = "";
@@ -226,3 +284,4 @@ function exportDeck(w, h) {
 
 	bsPopup.appendChild(printdeck);
 }
+

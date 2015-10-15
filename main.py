@@ -52,7 +52,7 @@ class MainHandler(webapp2.RequestHandler):
     	render_template(self, 'index.html', page_params)
 
 ###############################################################################
-class MyDecklistsHandler(webapp2.RequestHandler):
+class AboutHandler(webapp2.RequestHandler):
     def get(self):
     	email = get_user_email()
 
@@ -62,7 +62,40 @@ class MyDecklistsHandler(webapp2.RequestHandler):
      		'logout_url': users.create_logout_url('/')
    		}
 
-    	render_template(self, 'mydecklists.html', page_params)
+    	render_template(self, 'about.html', page_params)
+
+###############################################################################
+class MyDecklistsHandler(webapp2.RequestHandler):
+    def get(self):
+      email = get_user_email()
+
+      if email:
+        user_decklists = get_decks_for_user(email)
+        page_params = {
+          'user_email': email,
+          'login_url': users.create_login_url(),
+          'logout_url': users.create_logout_url('/'),
+          'decklists': user_decklists
+        }
+
+        render_template(self, 'mydecklists.html', page_params)
+      else:
+        self.redirect('/')
+
+###############################################################################
+class AllDecklistsHandler(webapp2.RequestHandler):
+    def get(self):
+      email = get_user_email()
+
+      all_decklists = get_all_decks()
+      page_params = {
+        'user_email': email,
+        'login_url': users.create_login_url(),
+        'logout_url': users.create_logout_url('/'),
+        'decklists': all_decklists
+      }
+
+      render_template(self, 'alldecklists.html', page_params)
 
 ###############################################################################
 class DeckBuilder(webapp2.RequestHandler):
@@ -81,6 +114,72 @@ class DeckBuilder(webapp2.RequestHandler):
     		'logout_url': users.create_logout_url('/')
     	}
     	render_template(self, 'deckbuilder.html', page_params)
+
+###############################################################################
+class SaveDeck(webapp2.RequestHandler):
+  def post(self):
+    email = get_user_email()
+
+    if email:
+      decklistObj = json.loads(self.request.get('inputData'))
+      # logging.info(decklistObj)
+      new_Decklist = DeckList()
+      new_Decklist.name = decklistObj['deckname']
+      new_Decklist.dustcost = decklistObj['dustcost']
+      new_Decklist.email = email
+      new_Decklist.decklist = json.dumps(decklistObj['list'])
+      new_Decklist.deck_class = decklistObj['deck_class']
+      new_Decklist.put()
+
+###############################################################################
+class DeckList(ndb.Model):
+  name = ndb.StringProperty()
+  decklist = ndb.JsonProperty()
+  time_created = ndb.DateTimeProperty(auto_now_add=True)
+  email = ndb.StringProperty()
+  dustcost = ndb.IntegerProperty()
+  deck_class = ndb.StringProperty()
+
+###############################################################################
+def get_decks_for_user(email):
+  result = list()
+  q = DeckList.query(DeckList.email == email)
+  q = q.order(-DeckList.time_created)
+  for deck in q.fetch(1000):
+    result.append(deck)
+  return result
+
+###############################################################################
+def get_all_decks():
+  result = list()
+  q = DeckList.query()
+  q = q.order(-DeckList.time_created)
+  for deck in q.fetch(1000):
+    result.append(deck)
+  return result
+
+###############################################################################
+def get_deck(deck_id):
+  return ndb.Key(urlsafe=deck_id).get()
+
+###############################################################################
+class DeckCheckHandler(webapp2.RequestHandler):
+  def get(self):
+    id = self.request.get('id')
+    deck = get_deck(id)
+    email = get_user_email()
+    cardlist = json.loads(deck.decklist)
+    if deck:
+      page_params = {
+        'user_email': email,
+        'login_url': users.create_login_url(),
+        'logout_url': users.create_logout_url('/'),
+        'deck': deck,
+        'cardlist': cardlist
+      }
+      render_template(self, 'deckcheck.html', page_params)
+    else:
+      self.redirect('/mydecklists')
 
 ###############################################################################
 # Returns an entire class' collection, with neutral cards (collectible only)
@@ -171,6 +270,10 @@ def get_neutral_cards():
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/deckbuilder', DeckBuilder),
-    ('/mydecklists', MyDecklistsHandler)
+    ('/mydecklists', MyDecklistsHandler),
+    ('/about', AboutHandler),
+    ('/savedeck', SaveDeck),
+    ('/deckcheck', DeckCheckHandler),
+    ('/alldecklists', AllDecklistsHandler)
 ], debug=True)
 
