@@ -1,5 +1,12 @@
 // Main Deckbuilder Javascript
 
+//list.js initialization
+var options = {
+    valueNames: [ 'name','type','cost','rarity','race','artist','cardset','mechanics' ]
+};
+
+var testList = new List('deckbuilder', options);
+
 // Load XML Mapping for tooltips
 if (window.XMLHttpRequest) {
    xhttp = new XMLHttpRequest();

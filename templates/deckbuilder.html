@@ -3,7 +3,7 @@
 
 <div id="decklist">
 	<form id="decklist_saver_form" action="/mydecklists">
-		<input id="deck_name_box" type="text" name="deckname" value="Enter Deck Name Here...">
+		<input id="deck_name_box" type="text" name="deckname" Placeholder="Enter Deck Name Here...">
 		<p id="cardcounter">0 / 30</p>
 		<ul id='inner_list'>
 			<li></li>
@@ -17,8 +17,9 @@
 	</form>
 </div>
 
-<div id="deckbuilder">
-	<div id="object" class="slideLeft">
+<div id="deckbuilder" class="container">
+	<input class="search" Placeholder="Search by card name, mana cost, type, rarity, etc..."/>
+	<div id="object" class="list slideLeft">
 		{% for ccard in class_cards %}
 		<a cardName="{{ccard.name}}" 
 			href="#" 
@@ -32,15 +33,21 @@
 			attack="{{ccard.attack}}"
 			health="{{ccard.health}}"
 			cardtext="{{ccard.text}}"
-			flavor="{{ccard.flavor}}"
 			artist="{{ccard.artist}}"
+			title="{{ccard.name}}" 
 		>
 			<img class="builder_card" height="303" width="200" src="{{ccard.img}}">
+			<p hidden class="name">{{ccard.name}}</p>
+			<p hidden class="type">{{ccard.type}}</p>
+			<p hidden class="cost">{{ccard.cost}}</p>
+			<p hidden class="rarity">{{ccard.rarity}}</p>
+			<p hidden class="race">{{ccard.race}}</p>
+			<p hidden class="artist">{{ccard.artist}}</p>
+			<p hidden class="cardset">{{ccard.cardSet}}</p>
+			<p hidden class="mechanics">{{ccard.mechanics}}</p>
 		</a>
 		{% endfor %}
-	</div>
 	<hr>
-	<div id="object" class="slideLeft">
 		{% for ncard in neutral_cards %}
 		<a cardName="{{ncard.name}}" 
 			href="#" 
@@ -54,10 +61,18 @@
 			attack="{{ncard.attack}}"
 			health="{{ncard.health}}"
 			cardtext="{{ncard.text}}"
-			flavor="{{ncard.flavor}}"
 			artist="{{ncard.artist}}"
+			title="{{ncard.name}}" 
 		>
 			<img class="builder_card" height="303" width="200" src="{{ncard.img}}">
+			<p hidden class="name">{{ncard.name}}</p>
+			<p hidden class="type">{{ncard.type}}</p>
+			<p hidden class="cost">{{ncard.cost}}</p>
+			<p hidden class="rarity">{{ncard.rarity}}</p>
+			<p hidden class="race">{{ncard.race}}</p>
+			<p hidden class="artist">{{ncard.artist}}</p>
+			<p hidden class="cardset">{{ncard.cardset}}</p>
+			<p hidden class="mechanics">{{ncard.mechanics}}</p>
 		</a>
 		{% endfor %}
 	</div>
@@ -84,6 +99,5 @@
   </div>
 
 <script type="text/javascript" src="/static/js/deckbuilder.js"></script>
-
 
 {% endblock %}
