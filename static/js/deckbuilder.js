@@ -39,6 +39,9 @@ var d_card = {
 	hheadID: ""
 };
 
+//Submission flag
+var flag = 0;
+
 //Gets the class name
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
@@ -53,6 +56,9 @@ function getQueryVariable(variable) {
 
 //Sends ajax request that adds deck to ndb
 function PrepareDeck(){
+
+	if( flag > 0 )
+		return false;
 
 	sortDeckList();
 	checkDeckSize();
@@ -82,6 +88,8 @@ function PrepareDeck(){
 		});
 
 		document.forms['decklist_saver_form'].submit();
+
+		flag++;
 	}
 }
 
