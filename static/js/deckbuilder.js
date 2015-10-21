@@ -31,7 +31,9 @@ var deck_list = {
 	decksize: 0,
 	dustcost: 0,
 	deckname: "",
-	deck_class: ""
+	deck_class: "",
+	write_up: "",
+	curve: [0,0,0,0,0,0,0,0]
 };
 
 var d_card = {
@@ -81,7 +83,8 @@ function PrepareDeck(){
 	}
 	else {
 		deck_list.deck_class = getQueryVariable("class");
-
+		// deck_list.write_up = document.getElementById('writeupbody').innerHTML;
+		deck_list.write_up = $("#txtEditor").Editor("getText");
 		$test = JSON.stringify(deck_list);
 
 		$.ajax({
@@ -130,12 +133,23 @@ function addCard(card) {
 		deck_list.list.push(current_dcard);
 		deck_list.decksize++;
 		deck_list.dustcost += getCardDust(current_dcard);
+
+		if(current_dcard.mana >= 7)
+			deck_list.curve[7] += 1;
+		else
+			deck_list.curve[current_dcard.mana] += 1;
+
 	}
 	else if (index >= 0 && deck_list.list[index].count < 2 && deck_list.decksize < 30) {
 		deck_list.list[index].count += 1;
 		current_dcard = deck_list.list[index];
 		deck_list.decksize++;
 		deck_list.dustcost += getCardDust(current_dcard);
+
+		if(current_dcard.mana >= 7)
+			deck_list.curve[7] += 1;
+		else
+			deck_list.curve[current_dcard.mana] += 1;
 	}
 	else {
 		current_dcard = deck_list.list[index];
@@ -182,13 +196,33 @@ function removeCard(card) {
 		card_count.innerHTML = 1;
 		deck_list.decksize--;
 		deck_list.dustcost -= getCardDust(deck_list.list[index]);
+
+		if(deck_list.list[index].mana >= 7)
+			deck_list.curve[7] -= 1;
+		else
+			deck_list.curve[deck_list.list[index].mana] -= 1;
 	}
 	else {
 		deck_list.dustcost -= getCardDust(deck_list.list[index]);
+
+		if(deck_list.list[index].mana >= 7)
+			deck_list.curve[7] -= 1;
+		else
+			deck_list.curve[deck_list.list[index].mana] -= 1;
+
 		deck_list.list.splice(index, 1);
 		main_list.removeChild(card_id);
 		deck_list.decksize--;
+
+		var leftoverTooltip = document.getElementsByClassName("wowhead-tooltip hearthhead-tooltip-image");
+		if(leftoverTooltip)
+			leftoverTooltip[0].setAttribute('style', 'position: absolute; top: 251px; left: 221px; width: 200px; visibility: hidden; display: none;');
+		leftoverTooltip = document.getElementsByClassName("wowhead-tooltip");
+		if(leftoverTooltip)
+			leftoverTooltip[0].setAttribute('style', 'position: absolute; top: -2323px; left: -2323px; width: 0px; display: none; visibility: hidden;');
+
 	}
+
 
 	sortDeckList();
 	checkDeckSize();
@@ -249,6 +283,37 @@ function checkDeckCost() {
 	// body...
 	var viewdust = document.getElementById('dustcounter');
 	viewdust.innerHTML = deck_list.dustcost + " Dust to Craft";
+
+	//Curve handler
+	$('[data-bar-chart]').each(function (i, svg) {
+		d3.selectAll("svg > *").remove();
+	  	var curve = deck_list.curve;
+	    var $svg = $(svg);
+	    var data = curve.map(function (datum) {
+	      return parseFloat(datum);
+	    });
+
+	    var barWidth = 29.5;
+	    var barSpace = 0.5;
+	    var chartHeight = $svg.outerHeight();
+
+	    var y = d3.scale.linear()
+	              .domain([0, d3.max(data)])
+	              .range([0, chartHeight]);
+
+	    d3.select(svg)
+	      .selectAll("rect")
+	        .data(data)
+	      .enter().append("rect")
+	        .attr("class", "bar")
+	        .attr("width", barWidth)
+	        .attr("x", function (d, i) { return barWidth*i + barSpace*i; })
+	        .attr("y", chartHeight)
+	        .attr("height", 0)
+	        .attr("y", function (d, i) { return chartHeight-y(d); })
+	        .attr("height", function (d) { return y(d); });
+	 });
+
 }
 
 //Resets the decklist both visually and on the backend
@@ -260,7 +325,10 @@ function resetDeck() {
 		list: [],
 		decksize: 0,
 		dustcost: 0,
-		deckname: ""
+		deckname: "",
+		deck_class: "",
+		write_up: "",
+		curve: [0,0,0,0,0,0,0,0]
 	};
 
 	checkDeckSize();

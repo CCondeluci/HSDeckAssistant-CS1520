@@ -3,6 +3,8 @@
 
 <div id="decklist">
 	<form id="decklist_saver_form" action="/mydecklists">
+		<svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
+		<p id="curvelist"><img src="/static/assets/mana-curve.png"></p>
 		<input id="deck_name_box" type="text" name="deckname" Placeholder="Enter Deck Name Here...">
 		<p id="cardcounter">0 / 30</p>
 		<ul id='inner_list'>
@@ -12,7 +14,8 @@
 		<p id="clearexport">
 			<button type="button" onclick="resetDeck()">Reset</button>
 			<button type="button" onclick="exportDeck(500, 500)" data-toggle="modal" data-target="#exportPopup">Export</button>
-			<button type="button" onclick="PrepareDeck()">Save</button>
+			<!-- <button type="button" onclick="PrepareDeck()">Save</button> -->
+			<button type="button" data-toggle="modal" data-target="#writeupPopup">Save</button>
 		</p>
 	</form>
 </div>
@@ -98,6 +101,44 @@
     </div>
   </div>
 
+<!-- Modal -->
+  <div class="modal modal-wide fade" id="writeupPopup" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Decklist Description</h4>
+        </div>
+        <!-- <div class="modal-body" id="writeupbody" contenteditable="true">
+        </div> -->
+        <div id="txtEditor"></div>
+		<script type="text/javascript">
+			$(document).ready( function() {
+				var editor = $("#txtEditor").Editor({'togglescreen':false});          
+			});
+		</script>
+        <div class="modal-footer">
+		  <button type="button" class="btn btn-default" id="writeupsave" onclick="PrepareDeck()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+<script type="text/javascript">
+	
+	// when .modal-wide opened, set content-body height based on browser height; 200 is appx height of modal padding, modal title and button bar
+
+	$(".modal-wide").on("show.bs.modal", function() {
+	  var height = $(window).height() - 200;
+	  $(this).find(".modal-body").css("max-height", height);
+	});
+		
+</script>
 <script type="text/javascript" src="/static/js/deckbuilder.js"></script>
+
 
 {% endblock %}

@@ -1,3 +1,52 @@
+.chart {
+    height: 70px;
+    width: 240px;
+    border-bottom: 1px solid #FFF;
+    display: block;
+    background-color: #000000;
+}
+
+.chart .bar {
+    fill: steelblue;
+}
+
+.Editor-editor {
+    height: 65%;
+    padding: 1%;
+    border: 1px solid #EEE;
+    border-radius: 0;
+    word-wrap: break-word;
+}
+
+#checkdeckleftpanel {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#checkdeckrightpanel {
+  margin-top: 20px;
+}
+
+#checkdeckmain {
+  margin-top: -20px;
+}
+#decklist.checkdecklist {
+  line-height: 30px;
+  width: 240px;
+  height: 100%;
+  float:left;
+  background-color: #eeeeee;
+  font-family: 'Source Sans Pro','Open Sans','Helvetica','Arial',sans-serif;
+  font-size: 13px;
+}
+
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}
+
 .loader {
   position: fixed;
   left: 0px;
@@ -148,6 +197,7 @@ section {
   text-align: center;
   color: #FFF;
   width: 240px;
+  margin-bottom: 0px;
 }
 
 #deck_name_box input {
@@ -179,6 +229,25 @@ section {
     margin-bottom: 0px;
     height: 30px;
 }
+
+#curvelist {
+  font-family: 'Source Sans Pro','Open Sans','Helvetica','Arial',sans-serif;
+  font-size: 20px;
+  background-color: #000000;
+  text-align: center;
+  color: #FFF;
+}
+
+#curvelist p {
+    display: block;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    margin-bottom: 0px;
+    height: 30px;
+}
+
 
 #clearexport {
   font-family: 'Source Sans Pro','Open Sans','Helvetica','Arial',sans-serif;

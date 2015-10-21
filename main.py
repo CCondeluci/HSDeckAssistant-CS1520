@@ -129,6 +129,8 @@ class SaveDeck(webapp2.RequestHandler):
       new_Decklist.email = email
       new_Decklist.decklist = json.dumps(decklistObj['list'])
       new_Decklist.deck_class = decklistObj['deck_class']
+      new_Decklist.write_up = decklistObj['write_up']
+      new_Decklist.curve = decklistObj['curve']
       new_Decklist.put()
 
 ###############################################################################
@@ -139,6 +141,8 @@ class DeckList(ndb.Model):
   email = ndb.StringProperty()
   dustcost = ndb.IntegerProperty()
   deck_class = ndb.StringProperty()
+  write_up = ndb.TextProperty()
+  curve = ndb.IntegerProperty(repeated=True)
 
 ###############################################################################
 def get_decks_for_user(email):

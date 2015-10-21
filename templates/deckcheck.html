@@ -1,11 +1,13 @@
 {% extends "_base.html" %}
 {% block content %}
 
-<div class="container">
+<div class="container-fluid" id="checkdeckmain">
 	<br>
-	<div class="row">
-		<div class="col-md-4">
-			<div id="decklist" style="background-color:transparent;">
+	<div class="row con">
+		<div class="col-md-3 col-sm-3" id="checkdeckleftpanel">
+			<div class="checkdecklist" id="decklist" style="background-color:transparent;">
+				<svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
+				<p id="dustcounter"><img src="/static/assets/mana-curve.png"></p>
 				<ul id='inner_list'>
 					{% for card in cardlist %}
 						<li id="{{card.cardId}}" class="{{card.rarity}}">
@@ -22,17 +24,135 @@
 					{% endfor %}
 				</ul>
 				<p id="dustcounter">Dust Cost: {{deck.dustcost}}</p>
+				<p id="clearexport">
+					<button type="button" onclick="exportDeck(500, 500)" data-toggle="modal" data-target="#exportPopup">Export</button>
+				</p>
 			</div>
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-8 col-sm-8" id="checkdeckrightpanel">
 			<h1>{{deck.name}}</h1>
 			<h2>{{deck.deck_class}}</h2>
-			<p>This is a basic test page to ensure contents of the deck are correctly stored and retrieved</p>
-			<p>A user written "deck explanation" would go here, and would just be HTML text</p>
+			<br>
+			<p>Deck Description:</p>
+			{{deck.write_up|safe}}
 		</div>
-
 		
 	</div>
 </div>
+
+<!-- Modal -->
+  <div class="modal fade" id="exportPopup" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Decklist Export</h4>
+        </div>
+        <div class="modal-body" id="deckbody">
+        </div>
+        <div class="modal-footer">
+          <button type="button" onclick="clearExport()" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+<script>
+
+  $('[data-bar-chart]').each(function (i, svg) {
+  	var curve = {{deck.curve}};
+
+    var $svg = $(svg);
+    var data = curve.map(function (datum) {
+      return parseFloat(datum);
+    });
+
+    var barWidth = 29.5;
+    var barSpace = 0.5;
+    var chartHeight = $svg.outerHeight();
+
+    var y = d3.scale.linear()
+              .domain([0, d3.max(data)])
+              .range([0, chartHeight]);
+
+    d3.select(svg)
+      .selectAll("rect")
+        .data(data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("width", barWidth)
+        .attr("x", function (d, i) { return barWidth*i + barSpace*i; })
+        .attr("y", chartHeight)
+        .attr("height", 0)
+        .transition()
+        .delay(function (d, i) { return i*100; })
+        .attr("y", function (d, i) { return chartHeight-y(d); })
+        .attr("height", function (d) { return y(d); });
+  });
+</script>
+
+<script type="text/javascript">
+	
+	// "Define" objects that will be used in functions
+	var deck_list = {
+		list: [],
+		decksize: 30,
+		dustcost: {{deck.dustcost}},
+		deckname: "{{deck.name}}",
+		deck_class: "{{deck.deck_class}}",
+		write_up: ""
+	};
+
+	var d_card = {
+
+		cardName: "",
+		count: 0,
+		rarity: 0,
+		cardId: "",
+		imgurl: "",
+		cardSet: "",
+		mana: 0,
+		hheadID: ""
+	};
+
+	setupDeck();
+
+	function setupDeck(){
+
+		{% for card in cardlist %}
+			var current_dcard = new Object();
+			current_dcard.cardName = "{{card.cardName}}";
+			current_dcard.count = {{card.count}};
+			current_dcard.mana = {{card.mana}};
+
+			deck_list.list.push(current_dcard);
+		{% endfor %}
+
+	}
+
+	//Export a deck to Cockatrice format
+	function exportDeck(w, h) {
+		var bsPopup = document.getElementById('deckbody');
+		bsPopup.innerHTML = "";
+		var printdeck = document.createElement('textarea');
+		printdeck.setAttribute('rows', 50);
+		printdeck.setAttribute('cols', 50);
+		printdeck.setAttribute('class', 'exportArea');
+		printdeck.setAttribute('id', 'checkClear');
+
+		templist = deck_list.list;
+		bsPopup.innerHTML = "<p>" + deck_list.deckname + "</p>";
+
+		for( var x = 0; x < templist.length; x++ ) {
+			printdeck.innerHTML += templist[x].count + " " + templist[x].cardName + "\n";
+		}
+
+		bsPopup.appendChild(printdeck);
+	}
+
+</script>
 
 {% endblock %}
