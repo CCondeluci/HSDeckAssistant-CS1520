@@ -1,12 +1,18 @@
 {% extends "_base.html" %}
 {% block content %}
-<form enctype="multipart/form-data" method="post" action="{{upload_url}}">
-    <div class="form-group">
-        <label>Username:</label><br/>
-        <input type="text" name="username"/><br/><br/>
-        <label>Profile picture:</label><br/>
-        <input type="file" name="pic"/><br/><br/>
-        <input type="submit" />
-    </div>
-</form>
+<head>
+</head>
+<body>
+    <form enctype="multipart/form-data" method="post" action="{{upload_url}}">
+        <div class="container" style="padding-top:30px">
+            <h3>Create your User Profile</h3><br/>
+            <label>Username:</label><br/>
+            <input type="text" name="username"/><br/><br/>
+            <label>Profile picture:</label><br/>
+            <div align="center"><input type="file" name="pic"/><br/><br/></div>
+            <input style="width:15%" type="submit" />
+        </div>
+    </form>
+</body>
+
 {% endblock %}

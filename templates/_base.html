@@ -64,15 +64,19 @@
 	            </ul>
 	            <ul class="nav navbar-nav navbar-right">
 	            	{% if user_email %}
-						{% if username %}
-							<li><a href="/">{{username}}</a></li>
-						{% endif %}
+						{% if username and user_pic %}
+                            <li><a href="/profile?user={{username}}">{{username}}</a></li>
+                        {%else%}
+                            {% if username %}
+                                <li><a href="/">{{username}}</a></li>
+                            {% endif %}
+                        {% endif %}
 						{% if user_pic %}
 							<li><img src="{{user_pic}}" alt="user avatar" width="50" height="50"></li>
 						{% endif %}
-	                <li><a href="{{ logout_url }}">Log Out</a></li>
+                        <li><a href="{{ logout_url }}">Log Out</a></li>
 	            	{% else %}
-	            	<li><a href="{{ login_url }}">Login</a></li>
+                        <li><a href="{{ login_url }}">Login</a></li>
 	            	{% endif %}
 	            </ul>
 	        </div>
