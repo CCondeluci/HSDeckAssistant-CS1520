@@ -1,0 +1,12 @@
+{% extends "_base.html" %}
+{% block content %}
+<form enctype="multipart/form-data" method="post" action="{{upload_url}}">
+    <div class="form-group">
+        <label>Username:</label><br/>
+        <input type="text" name="username"/><br/><br/>
+        <label>Profile picture:</label><br/>
+        <input type="file" name="pic"/><br/><br/>
+        <input type="submit" />
+    </div>
+</form>
+{% endblock %}
