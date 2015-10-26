@@ -140,7 +140,7 @@ function addCard(card) {
 			deck_list.curve[current_dcard.mana] += 1;
 
 	}
-	else if (index >= 0 && deck_list.list[index].count < 2 && deck_list.decksize < 30) {
+	else if (index >= 0 && deck_list.list[index].count < 2 && deck_list.decksize < 30 && current_dcard.rarity != "Legendary") {
 		deck_list.list[index].count += 1;
 		current_dcard = deck_list.list[index];
 		deck_list.decksize++;
@@ -172,7 +172,7 @@ function addCard(card) {
 	else {
 		var card_count = document.getElementById(current_dcard.cardId).childNodes[0].childNodes[1].childNodes[4];
 
-		if( current_dcard.count <= 2 && current_dcard.rarity != "Legendary" ){
+		if( current_dcard.count <= 2 && current_dcard.rarity != "Legendary"){
 			card_count.innerHTML = current_dcard.count;
 		}
 	}
