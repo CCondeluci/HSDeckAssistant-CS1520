@@ -90,7 +90,7 @@ class AddProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
                 type = image.content_type
 
                 if type in ['image/jpeg', 'image/png', 'image/gif', 'image/webp']:
-                    userInfo.pic_url = images.get_serving_url(image.key())
+                    userInfo.pic_url = images.get_serving_url(image.key(),size=200,crop=True)
             else:
                 userInfo.pic_url = '/static/assets/default_avatar.jpg'
 
