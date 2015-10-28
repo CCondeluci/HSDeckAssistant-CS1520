@@ -3,5 +3,8 @@
 <div class="container" style="padding-top:30px">
     <img alt="user avatar" src="{{view_pic_url}}"></img>
     <br/><h3>{{ view_username }}</h3>
+    {% if user_id %}
+    <a href="/editprofile?id={{user_id}}">Edit your profile</a>
+    {% endif %}
 </div>
 {% endblock %}

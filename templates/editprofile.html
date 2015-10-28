@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+{% block content %}
+<div class="container" style="padding-top:30px">
+    <img alt="user avatar" src="{{user_pic}}"></img>
+    <br/><h3>{{ username }}</h3>
+    <form enctype="multipart/form-data" method="post" action="{{upload_url}}">
+        <div class="container" style="padding-top:30px">
+            <label>Edit profile picture:</label><br/>
+            <div align="center"><input type="file" name="pic"/><br/><br/></div>
+            <input style="width:15%" type="submit" />
+        </div>
+    </form>
+</div>
+{% endblock %}

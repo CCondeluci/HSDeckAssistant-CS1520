@@ -62,17 +62,60 @@ def get_base_params(email):
     return page_params
 
 ###############################################################################
+class UpdateProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
+    def post(self):
+        user = users.get_current_user()
+        userinfo = UserInfo.get_userinfo()
+        upload_files = self.get_uploads()
+        if len(upload_files) > 0:
+            image = upload_files[0]
+            type = image.content_type
+
+            if type in ['image/jpeg', 'image/png', 'image/gif', 'image/webp']:
+                blobstore.delete(userinfo.blob_key)
+                userinfo.pic_url = images.get_serving_url(image.key(),size=200,crop=True)
+                userinfo.blob_key = image.key()
+                userinfo.put()
+
+        else:
+            userinfo.pic_url = '/static/assets/default_avatar.jpg'
+
+        self.redirect('/')
+
+
+###############################################################################
+class EditProfileHandler(webapp2.RequestHandler):
+    def get(self):
+        args = self.request.get_all("id")
+        user = users.get_current_user()
+        if len(args) == 1 and user:
+            edit_id = args[0]
+            if edit_id == user.user_id():
+                page_params = get_base_params(user.email())
+                page_params['upload_url'] =  blobstore.create_upload_url('/updateprofile')
+                render_template(self, 'editprofile.html', page_params)
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/')
+###############################################################################
 class ViewProfileHandler(webapp2.RequestHandler):
     def get(self):
         args = self.request.get_all("user")
         email = get_user_email()
         if len(args) == 1:
-            user = self.request.get_all("user")[0]
-            userinfo = UserInfo.get_by_username(user)
-            if userinfo:
+            view_user = args[0]
+            view_userinfo = UserInfo.get_by_username(view_user)
+            if view_userinfo:
+                
                 page_params = get_base_params(email)
-                page_params['view_username'] = userinfo.get_username()
-                page_params['view_pic_url'] = userinfo.get_user_pic()
+                page_params['view_username'] = view_userinfo.get_username()
+                page_params['view_pic_url'] = view_userinfo.get_user_pic()
+
+                my_userinfo = UserInfo.get_userinfo()
+                if my_userinfo and my_userinfo.user_id == view_userinfo.user_id:
+                    page_params['user_id'] = my_userinfo.user_id
+
                 render_template(self, 'profile.html', page_params)
             else:
                 self.redirect('/') #should we make a 404 page?
@@ -92,6 +135,7 @@ class AddProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
 
                 if type in ['image/jpeg', 'image/png', 'image/gif', 'image/webp']:
                     userInfo.pic_url = images.get_serving_url(image.key(),size=200,crop=True)
+                    userInfo.blob_key = image.key()
             else:
                 userInfo.pic_url = '/static/assets/default_avatar.jpg'
 
@@ -202,6 +246,7 @@ class UserInfo(ndb.Model):
     user_id = ndb.StringProperty()
     username = ndb.StringProperty()
     pic_url = ndb.StringProperty()
+    blob_key = ndb.BlobKeyProperty()
     @staticmethod
     def get_userinfo():
         userinfo = None
@@ -214,6 +259,11 @@ class UserInfo(ndb.Model):
     def get_by_username(username):
         q = UserInfo.query(ancestor=USERINFO_KEY)
         userinfo = q.filter(UserInfo.username == username).get()
+        return userinfo
+    @staticmethod
+    def get_by_email(email):
+        q = UserInfo.query(ancestor=USERINFO_KEY)
+        userinfo = q.filter(UserInfo.email == email)
         return userinfo
 
     def get_user_pic(self):
@@ -356,5 +406,7 @@ app = webapp2.WSGIApplication([
                 ('/alldecklists', AllDecklistsHandler),
                 ('/createprofile', CreateProfileHandler),
                 ('/add_profile' , AddProfileHandler),
-                ('/profile', ViewProfileHandler)
+                ('/profile', ViewProfileHandler),
+                ('/editprofile', EditProfileHandler),
+                ('/updateprofile', UpdateProfileHandler)
 ], debug=True)
