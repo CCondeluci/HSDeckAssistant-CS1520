@@ -72,7 +72,8 @@ class UpdateProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
             type = image.content_type
 
             if type in ['image/jpeg', 'image/png', 'image/gif', 'image/webp']:
-                blobstore.delete(userinfo.blob_key)
+                if userinfo.blob_key:
+                    blobstore.delete(userinfo.blob_key)
                 userinfo.pic_url = images.get_serving_url(image.key(),size=200,crop=True)
                 userinfo.blob_key = image.key()
                 userinfo.put()
@@ -136,6 +137,9 @@ class AddProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
                 if type in ['image/jpeg', 'image/png', 'image/gif', 'image/webp']:
                     userInfo.pic_url = images.get_serving_url(image.key(),size=200,crop=True)
                     userInfo.blob_key = image.key()
+                else:
+                    userInfo.pic_url = '/static/assets/default_avatar.jpg'
+
             else:
                 userInfo.pic_url = '/static/assets/default_avatar.jpg'
 
