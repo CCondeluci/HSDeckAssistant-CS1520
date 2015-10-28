@@ -65,13 +65,14 @@ def get_base_params(email):
 class ViewProfileHandler(webapp2.RequestHandler):
     def get(self):
         args = self.request.get_all("user")
+        email = get_user_email()
         if len(args) == 1:
             user = self.request.get_all("user")[0]
             userinfo = UserInfo.get_by_username(user)
             if userinfo:
-                page_params = get_base_params(userinfo.email)
-                page_params['username'] = userinfo.get_username()
-                page_params['pic_url'] = userinfo.get_user_pic()
+                page_params = get_base_params(email)
+                page_params['view_username'] = userinfo.get_username()
+                page_params['view_pic_url'] = userinfo.get_user_pic()
                 render_template(self, 'profile.html', page_params)
             else:
                 self.redirect('/') #should we make a 404 page?
