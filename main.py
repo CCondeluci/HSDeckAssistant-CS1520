@@ -31,7 +31,8 @@ def render_template(handler, templatename, templatevalues={}):
 
 
 ###############################################################################
-# We'll use this convenience function to retrieve the current user's email.
+#convenience functions
+
 def get_user_email():
     result = None
     user = users.get_current_user()
@@ -213,6 +214,10 @@ class AllDecklistsHandler(webapp2.RequestHandler):
     def get(self):
         email = get_user_email()
         all_decklists = get_all_decks()
+
+        q = UserInfo.query(ancestor=USERINFO_KEY)
+        for decklist in all_decklists:
+            decklist.username = q.filter(UserInfo.email == decklist.email).get()
         page_params = get_base_params(email)
         page_params['decklists'] = all_decklists
         render_template(self, 'alldecklists.html', page_params)
