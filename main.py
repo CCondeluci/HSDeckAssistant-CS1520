@@ -214,10 +214,7 @@ class AllDecklistsHandler(webapp2.RequestHandler):
     def get(self):
         email = get_user_email()
         all_decklists = get_all_decks()
-
         q = UserInfo.query(ancestor=USERINFO_KEY)
-        for decklist in all_decklists:
-            decklist.username = q.filter(UserInfo.email == decklist.email).get()
         page_params = get_base_params(email)
         page_params['decklists'] = all_decklists
         render_template(self, 'alldecklists.html', page_params)
@@ -248,6 +245,7 @@ class SaveDeck(webapp2.RequestHandler):
             new_Decklist.name = decklistObj['deckname']
             new_Decklist.dustcost = decklistObj['dustcost']
             new_Decklist.email = email
+            new_Decklist.username = UserInfo.query().filter(UserInfo.email == email).get()
             new_Decklist.decklist = json.dumps(decklistObj['list'])
             new_Decklist.deck_class = decklistObj['deck_class']
             new_Decklist.write_up = decklistObj['write_up']
@@ -260,6 +258,7 @@ class DeckList(ndb.Model):
     decklist = ndb.JsonProperty()
     time_created = ndb.DateTimeProperty(auto_now_add=True)
     email = ndb.StringProperty()
+    username = ndb.StringProperty()
     dustcost = ndb.IntegerProperty()
     deck_class = ndb.StringProperty()
     write_up = ndb.TextProperty()
