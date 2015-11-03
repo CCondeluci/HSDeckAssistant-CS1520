@@ -163,7 +163,7 @@ class AddProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
             userInfo.put()
             self.redirect('/')
         else:
-            self.redirect('/createprofile')
+            self.redirect('/')
 
 class CreateProfileHandler(webapp2.RequestHandler):
     def get(self):
