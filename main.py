@@ -4,7 +4,7 @@ import sys
 import os
 import json
 import logging
-
+import re
 if 'lib' not in sys.path:
     sys.path[0:0] = ['lib']
 
@@ -61,6 +61,20 @@ def get_base_params(email):
             page_params['username']=email
     return page_params
 
+###############################################################################
+class ValidateUserinfoHandler(webapp2.RequestHandler):
+    def get(self):
+        self.post()
+    def post(self):
+        new_username = self.request.get('username')
+        if len(new_username)>=3 and len(new_username)<=12 and not re.search(r'[^A-Za-z0-9_]', new_username): 
+            q = UserInfo.query()
+            if not q.filter(UserInfo.username == new_username).get():
+                self.response.out.write(1)
+            else:
+                self.response.out.write(0)
+        else:
+            self.response.out.write(-1)
 ###############################################################################
 class UpdateProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
@@ -148,6 +162,8 @@ class AddProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
             userInfo.username = self.request.get('username')
             userInfo.put()
             self.redirect('/')
+        else:
+            self.redirect('/createprofile')
 
 class CreateProfileHandler(webapp2.RequestHandler):
     def get(self):
@@ -313,7 +329,6 @@ class DeckCheckHandler(webapp2.RequestHandler):
             render_template(self, 'deckcheck.html', page_params)
         else:
             self.redirect('/mydecklists')
-
 ###############################################################################
 # Returns an entire class' collection, with neutral cards (collectible only)
 ###############################################################################
@@ -412,5 +427,6 @@ app = webapp2.WSGIApplication([
                 ('/add_profile' , AddProfileHandler),
                 ('/profile', ViewProfileHandler),
                 ('/editprofile', EditProfileHandler),
-                ('/updateprofile', UpdateProfileHandler)
+                ('/updateprofile', UpdateProfileHandler),
+                ('/check_availability',ValidateUserinfoHandler)
 ], debug=True)

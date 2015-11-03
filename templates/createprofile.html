@@ -3,19 +3,18 @@
 <head>
 </head>
 <body>
-    <form enctype="multipart/form-data" method="post" action="{{upload_url}}" onsubmit="return validateFile(this);">
-        <div class="container" style="padding-top:30px">
+    <div class="container" style="padding-top:30px">
+        <form enctype="multipart/form-data" method="post" action="{{upload_url}}">
             <h3>Create your User Profile</h3><br/>
             <label>Username:</label><br/>
-            <input type="text" name="username" pattern="[A-Za-z0-9_]{3,12}" 
-            title ="3 character min, 12 character max, only alphanumeric characters & underscores are allowed." required /><br/>
+            <input type="text" name="username" id="usernameField" required>
+            <div id="usernametakendiv"></div>
             <br/>
             <label>Profile picture:</label><br/>
             <div align="center"><input id="in_pic" type="file" name="pic"/><br/><br/></div>
-            <input style="width:15%" type="submit" />
-        </div>
-    </form>
-    <script src="/static/js/validateFile.js" />
+            <input style="width:15%" type="submit" id="submitButton" value="Submit"/>
+        </form>
+    </div>
+    <script src="/static/js/validateUserInfo.js" />
 </body>
-
 {% endblock %}
