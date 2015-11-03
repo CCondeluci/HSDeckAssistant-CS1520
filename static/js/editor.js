@@ -772,7 +772,7 @@ You should have received a copy of the GNU General Public License along with thi
 																		id:"vidURL",
 																		required:true,
 																		class:"form-control form-control-link",
-																		placeholder:"Enter URL"
+																		placeholder:"Enter YouTube URL"
 																	})),
 											"beforeLoad":function(){ 
 												editorObj = this;
@@ -799,15 +799,18 @@ You should have received a copy of the GNU General Public License along with thi
 												if(range=='' && targetText==''){ 
 													targetText =targetURL;	
 												}
+
+												targetURL = targetURL.split("=")[1];
+
 												if(navigator.userAgent.match(/MSIE/i)){	
-													var targetLink='<iframe width="560" height="315" src="'+targetURL+'" frameborder="0" allowfullscreen></iframe>';
+													var targetLink='<iframe width="560" height="315" src="https://www.youtube.com/embed/'+targetURL+'" frameborder="0" allowfullscreen></iframe>';
 													methods.restoreSelection.apply(editorObj,[targetLink,'html']);
 												}
 												else{
 												 	// methods.restoreSelection.apply(editorObj, [targetText]);																																		
 													// document.execCommand('createLink',false,targetURL);
 
-													var targetLink='<iframe width="560" height="315" src="'+targetURL+'" frameborder="0" allowfullscreen></iframe>';
+													var targetLink='<iframe width="560" height="315" src="https://www.youtube.com/embed/'+targetURL+'" frameborder="0" allowfullscreen></iframe>';
 													methods.restoreSelection.apply(editorObj,[targetLink,'html']);
 												}
 												$(editorObj).data("editor").find('a[href="'+targetURL+'"]').each(function(){ $(this).attr("target", "_blank"); });
