@@ -31,7 +31,8 @@ def render_template(handler, templatename, templatevalues={}):
 
 
 ###############################################################################
-# We'll use this convenience function to retrieve the current user's email.
+#convenience functions
+
 def get_user_email():
     result = None
     user = users.get_current_user()
@@ -126,7 +127,7 @@ class ViewProfileHandler(webapp2.RequestHandler):
                 page_params = get_base_params(email)
                 page_params['view_username'] = view_userinfo.get_username()
                 page_params['view_pic_url'] = view_userinfo.get_user_pic()
-
+                page_params['decks'] = UserInfo.get_decks_by_userinfo(view_userinfo)
                 my_userinfo = UserInfo.get_userinfo()
                 if my_userinfo and my_userinfo.user_id == view_userinfo.user_id:
                     page_params['user_id'] = my_userinfo.user_id
@@ -213,6 +214,7 @@ class AllDecklistsHandler(webapp2.RequestHandler):
     def get(self):
         email = get_user_email()
         all_decklists = get_all_decks()
+        q = UserInfo.query(ancestor=USERINFO_KEY)
         page_params = get_base_params(email)
         page_params['decklists'] = all_decklists
         render_template(self, 'alldecklists.html', page_params)
@@ -243,6 +245,7 @@ class SaveDeck(webapp2.RequestHandler):
             new_Decklist.name = decklistObj['deckname']
             new_Decklist.dustcost = decklistObj['dustcost']
             new_Decklist.email = email
+            new_Decklist.username = UserInfo.query().filter(UserInfo.email == email).get().username
             new_Decklist.decklist = json.dumps(decklistObj['list'])
             new_Decklist.deck_class = decklistObj['deck_class']
             new_Decklist.write_up = decklistObj['write_up']
@@ -255,6 +258,7 @@ class DeckList(ndb.Model):
     decklist = ndb.JsonProperty()
     time_created = ndb.DateTimeProperty(auto_now_add=True)
     email = ndb.StringProperty()
+    username = ndb.StringProperty()
     dustcost = ndb.IntegerProperty()
     deck_class = ndb.StringProperty()
     write_up = ndb.TextProperty()
@@ -285,7 +289,9 @@ class UserInfo(ndb.Model):
         q = UserInfo.query(ancestor=USERINFO_KEY)
         userinfo = q.filter(UserInfo.email == email)
         return userinfo
-
+    @staticmethod
+    def get_decks_by_userinfo(userinfo):
+        return get_decks_for_user(userinfo.email)
     def get_user_pic(self):
         return self.pic_url
 
