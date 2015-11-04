@@ -100,6 +100,8 @@ function PrepareDeck(){
 		document.forms['decklist_saver_form'].submit();
 
 		flag++;
+
+		
 	}
 }
 

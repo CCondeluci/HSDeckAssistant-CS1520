@@ -93,11 +93,15 @@
 }
 
 h1 {
-  padding: 10px 0px 0px 0px;
+  padding: 20px 0px 20px 0px;
   font-family: Helvetica;
   font-size: 50pt !important;
   color: #FFF;
   text-shadow: 2px 2px 5px #000000;
+}
+
+.class_select_header {
+  padding: 20px 0px 0px 0px !important;
 }
 
 body {
