@@ -127,7 +127,7 @@ class ViewProfileHandler(webapp2.RequestHandler):
                 page_params = get_base_params(email)
                 page_params['view_username'] = view_userinfo.get_username()
                 page_params['view_pic_url'] = view_userinfo.get_user_pic()
-
+                page_params['decks'] = UserInfo.get_decks_by_userinfo(view_userinfo)
                 my_userinfo = UserInfo.get_userinfo()
                 if my_userinfo and my_userinfo.user_id == view_userinfo.user_id:
                     page_params['user_id'] = my_userinfo.user_id
@@ -245,7 +245,7 @@ class SaveDeck(webapp2.RequestHandler):
             new_Decklist.name = decklistObj['deckname']
             new_Decklist.dustcost = decklistObj['dustcost']
             new_Decklist.email = email
-            new_Decklist.username = UserInfo.query().filter(UserInfo.email == email).get()
+            new_Decklist.username = UserInfo.query().filter(UserInfo.email == email).get().username
             new_Decklist.decklist = json.dumps(decklistObj['list'])
             new_Decklist.deck_class = decklistObj['deck_class']
             new_Decklist.write_up = decklistObj['write_up']
@@ -289,7 +289,9 @@ class UserInfo(ndb.Model):
         q = UserInfo.query(ancestor=USERINFO_KEY)
         userinfo = q.filter(UserInfo.email == email)
         return userinfo
-
+    @staticmethod
+    def get_decks_by_userinfo(userinfo):
+        return get_decks_for_user(userinfo.email)
     def get_user_pic(self):
         return self.pic_url
 

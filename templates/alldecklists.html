@@ -15,7 +15,7 @@
     {% for deck in decklists %}
 
       <tr>
-          <td><a href="/profile?user={{deck.username}}">{{deck.username}}</a>}</td>
+          <td><a href="/profile?user={{deck.username}}">{{deck.username}}</a></td>
         <td><a href="/deckcheck?id={{deck.key.urlsafe}}">{{deck.name}}</a></td>
         <td>{{deck.deck_class}}</td>
         <td>{{deck.time_created}}</td>
