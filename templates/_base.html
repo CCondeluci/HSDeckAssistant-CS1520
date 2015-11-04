@@ -3,21 +3,34 @@
     <title>HS Deck Assistant</title>
    
 
-    <!-- import bootstrap files -->
+    <!-- Bootstrap handlers and jQuery -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+	<!-- Tooltipping provided by the HearthHead database -->
 	<script type="text/javascript" src="http://static.wowhead.com/widgets/power.js"></script><script>var wowhead_tooltips = { "colorlinks": false, "iconizelinks": true, "renamelinks": false }</script>
+
+	<!-- DataTables -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs/dt-1.10.9,fh-3.0.0/datatables.min.css"/>
 	<script type="text/javascript" src="https://cdn.datatables.net/r/bs/dt-1.10.9,fh-3.0.0/datatables.min.js"></script>
+
+	<!-- Json2 -->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/json2/20150503/json2.min.js"></script>
+
+	<!-- List.js -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js"></script>
+
+	<!-- FontAwesome and Line-Control Rich Text Editor -->
 	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 	<script src="/static/js/editor.js"></script>
 	<link rel="stylesheet" href="/static/js/editor.css">
+
+	<!-- d3.js -->
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 
+	<!-- Custom Stylesheets -->
 	<link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/animations.css">
 
@@ -64,6 +77,7 @@
 	            </ul>
 	            <ul class="nav navbar-nav navbar-right">
 	            	{% if user_email %}
+	            		<li><a href="#contactModal" data-toggle="modal">Contact Us</a></li>
 						{% if username and user_pic %}
                             <li><a href="/profile?user={{username}}">{{username}}</a></li>
                         {%else%}
@@ -90,18 +104,63 @@
 	{% block content %}
 	{% endblock %}
 
+	<div id="contactModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        <h3 id="contactModalLabel">Contact Us!</h3>
+	      </div>
+	      <div class="modal-body">
+	        <form id="contact-us-form" class="form-horizontal col-sm-12">
+	          <div class="form-group">
+	          	<textarea id="contact-textarea" class="form-control" placeholder="Your message here.." data-placement="top" data-trigger="manual" rows="15"></textarea>
+	          </div>
+	          <div class="form-group"><button id="submitfeedbackbutton" type="submit" class="btn btn-success pull-right" onclick="sendFeeback()">Send Feeback</button></div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
   </body>  
 
   	<script type="text/javascript">
 
-		$(function(){
+  		var sendFlag = 0;
 
+		$(function(){
 		  $(".barclass").click(function(){
 		    $('body').prepend("<div class=\"loader\"></div>").fadeIn();  
 		      //return false;  // comment out this to for the link to work
 		  });
-
 		});
+
+		function sendFeeback(){
+
+			if ( sendFlag > 0 )
+				return false;
+
+			getFeedback = document.getElementById("contact-textarea").value;
+
+			$.ajax({
+
+				type: "POST",
+				url: "/sendfeedback",
+				data: {feedback_area: getFeedback}
+
+			}).done(function(data){
+				console.log(data);
+			});
+
+			feedback_button = document.getElementById('submitfeedbackbutton');
+			feedback_button.innerHTML = "Feedback Sent!";
+
+			sendFlag++;
+		}
 
 	</script>
 

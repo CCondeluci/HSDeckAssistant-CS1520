@@ -758,6 +758,68 @@ You should have received a copy of the GNU General Public License along with thi
 												$(this).data("editor").focus();
 											}},
 
+							//method modified by Carmen Condeluci, adapted from insert_link to add embedded youtube videos
+						  'insert_video': { "modal": true,
+						   					"modalId": "InsertVideo", 
+											"icon":"fa fa-youtube", 
+											"tooltip": "Insert Video", 
+											"modalHeader": "Insert Video",
+											"modalBody": $('<div/>',{   class:"form-group"
+																	}).append($('<div/>',{
+																		id :"errMsg"
+																	})).append($('<input/>',{
+																		type:"text",
+																		id:"vidURL",
+																		required:true,
+																		class:"form-control form-control-link",
+																		placeholder:"Enter YouTube URL"
+																	})),
+											"beforeLoad":function(){ 
+												editorObj = this;
+												//$('#vidText').val("");
+												$('#vidURL').val("");
+												$(".alert").alert("close");
+												if($(editorObj).data('currentRange')!=''){ 
+													$('#vidText').val($(editorObj).data('currentRange'));
+												}
+											},
+											"onSave":function(){
+												var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
+												var targetText = '';
+												var targetURL  = $('#vidURL').val();
+												var range      = $(editorObj).data('currentRange');
+												if(targetURL ==''){
+													methods.showMessage.apply(editorObj,["errMsg","Please enter url"]);
+													return false;
+												}												
+												if(!targetURL.match(urlPattern)){
+													methods.showMessage.apply(editorObj,["errMsg","Enter valid url"]);
+													return false;
+												}													
+												if(range=='' && targetText==''){ 
+													targetText =targetURL;	
+												}
+
+												targetURL = targetURL.split("=")[1];
+
+												if(navigator.userAgent.match(/MSIE/i)){	
+													var targetLink='<iframe width="560" height="315" src="https://www.youtube.com/embed/'+targetURL+'" frameborder="0" allowfullscreen></iframe>';
+													methods.restoreSelection.apply(editorObj,[targetLink,'html']);
+												}
+												else{
+												 	// methods.restoreSelection.apply(editorObj, [targetText]);																																		
+													// document.execCommand('createLink',false,targetURL);
+
+													var targetLink='<iframe width="560" height="315" src="https://www.youtube.com/embed/'+targetURL+'" frameborder="0" allowfullscreen></iframe>';
+													methods.restoreSelection.apply(editorObj,[targetLink,'html']);
+												}
+												$(editorObj).data("editor").find('a[href="'+targetURL+'"]').each(function(){ $(this).attr("target", "_blank"); });
+												$(".alert").alert("close");
+												$("#InsertVideo").modal("hide");
+												$(editorObj).data("editor").focus();
+												return false;
+											}},
+
 						'insert_table'	: { "modal": true,
 					   						"modalId": "InsertTable", 
 											"icon":"fa fa-table", 
@@ -956,7 +1018,7 @@ You should have received a copy of the GNU General Public License along with thi
 							  'textformats': ['indent', 'outdent', 'block_quote', 'ol', 'ul'],
 							  'fonteffects' : ['fonts', 'styles', 'font_size'],
 							  'actions' : ['undo', 'redo'],
-							  'insertoptions' : ['insert_link', 'unlink', 'insert_img', 'insert_table'],
+							  'insertoptions' : ['insert_link', 'unlink', 'insert_img', 'insert_video', 'insert_table'],
 							  'extraeffects' : ['strikeout', 'hr_line', 'splchars'],
 							  'advancedoptions' : ['print', 'rm_format', 'select_all', 'source'],
 							  'screeneffects' : ['togglescreen']
@@ -986,6 +1048,7 @@ You should have received a copy of the GNU General Public License along with thi
 				'insert_link':true,
 				'unlink':true,
 				'insert_img':true,
+				'insert_video':true,
 				'hr_line':true,
 				'block_quote':true,
 				'source':true,

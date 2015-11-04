@@ -5,6 +5,8 @@ import os
 import json
 import logging
 import re
+import time
+
 if 'lib' not in sys.path:
     sys.path[0:0] = ['lib']
 
@@ -12,6 +14,7 @@ import unirest
 
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
+from google.appengine.api import mail
 from google.appengine.ext import ndb
 from google.appengine.api import images
 from google.appengine.ext import blobstore
@@ -166,6 +169,7 @@ class AddProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
         else:
             self.redirect('/')
 
+###############################################################################
 class CreateProfileHandler(webapp2.RequestHandler):
     def get(self):
         email = get_user_email()
@@ -175,6 +179,18 @@ class CreateProfileHandler(webapp2.RequestHandler):
             page_params = get_base_params(email)
             page_params['upload_url'] =  blobstore.create_upload_url('/add_profile')
             render_template(self, 'createprofile.html', page_params)
+
+###############################################################################
+class SendFeedbackHandler(webapp2.RequestHandler):
+    def post(self):
+        email = get_user_email()
+        if email:
+            feedback = mail.EmailMessage()
+            feedback.sender = email
+            feedback.to = 'hsdeckassistant.webmaster@gmail.com'
+            feedback.subject = 'HSDeckAssistant Feedback'
+            feedback.body = self.request.get('feedback_area')
+            feedback.send()
 
 ###############################################################################
 class MainHandler(webapp2.RequestHandler):
@@ -199,6 +215,8 @@ class AboutHandler(webapp2.RequestHandler):
 ###############################################################################
 class MyDecklistsHandler(webapp2.RequestHandler):
     def get(self):
+        time.sleep(0.5)
+
         email = get_user_email()
 
         if email:
@@ -434,5 +452,6 @@ app = webapp2.WSGIApplication([
                 ('/profile', ViewProfileHandler),
                 ('/editprofile', EditProfileHandler),
                 ('/updateprofile', UpdateProfileHandler),
-                ('/check_availability',ValidateUserinfoHandler)
+                ('/check_availability', ValidateUserinfoHandler),
+                ('/sendfeedback', SendFeedbackHandler)
 ], debug=True)
