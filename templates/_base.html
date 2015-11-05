@@ -112,15 +112,15 @@
 	        <h3 id="contactModalLabel">Contact Us!</h3>
 	      </div>
 	      <div class="modal-body">
-	        <form id="contact-us-form" class="form-horizontal col-sm-12">
+	        <div id="contact-us-form" class="form-horizontal col-sm-12">
 	          <div class="form-group">
 	          	<textarea id="contact-textarea" class="form-control" placeholder="Your message here.." data-placement="top" data-trigger="manual" rows="15"></textarea>
 	          </div>
 	          <div class="form-group"><button id="submitfeedbackbutton" type="submit" class="btn btn-success pull-right" onclick="sendFeeback()">Send Feeback</button></div>
-	        </form>
+	        </div>
 	      </div>
 	      <div class="modal-footer">
-	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 	      </div>
 	    </div>
 	  </div>
@@ -158,6 +158,7 @@
 
 			feedback_button = document.getElementById('submitfeedbackbutton');
 			feedback_button.innerHTML = "Feedback Sent!";
+			feedback_button.disabled = true;
 
 			sendFlag++;
 		}

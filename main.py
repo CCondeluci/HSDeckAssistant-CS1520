@@ -191,6 +191,7 @@ class SendFeedbackHandler(webapp2.RequestHandler):
             feedback.subject = 'HSDeckAssistant Feedback'
             feedback.body = self.request.get('feedback_area')
             feedback.send()
+            self.redirect('/')
 
 ###############################################################################
 class MainHandler(webapp2.RequestHandler):
