@@ -30,6 +30,9 @@
 	<!-- d3.js -->
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 
+	<!-- ZeroClipboard -->
+    <script src="/static/js/ZeroClipboard/ZeroClipboard.js"></script>
+
 	<!-- Custom Stylesheets -->
 	<link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/animations.css">
@@ -129,6 +132,9 @@
   </body>  
 
   	<script type="text/javascript">
+
+	  	//zeroclipboard setup for exports
+		var client = new ZeroClipboard($("#copy-button"));
 
   		var sendFlag = 0;
 

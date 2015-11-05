@@ -79,6 +79,7 @@ class ValidateUserinfoHandler(webapp2.RequestHandler):
                 self.response.out.write(0)
         else:
             self.response.out.write(-1)
+
 ###############################################################################
 class UpdateProfileHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
@@ -248,6 +249,7 @@ class DeckBuilder(webapp2.RequestHandler):
         page_params = get_base_params(email)
         page_params['class_cards'] = class_cards
         page_params['neutral_cards'] = neutral_cards
+        page_params['playerClass'] = playerClass
 
         render_template(self, 'deckbuilder.html', page_params)
 

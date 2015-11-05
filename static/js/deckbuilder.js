@@ -3,7 +3,13 @@
 //list.js initialization
 var options = {
     valueNames: [ 'name','type','cost','rarity','race','artist','cardset','mechanics' ],
-    page:1000
+    page:8,
+    plugins: [
+      ListPagination({
+      	innerWindow: 7,
+      	outerWindow: 2
+      })
+    ]
 };
 
 var testList = new List('deckbuilder', options);
@@ -361,6 +367,7 @@ function exportDeck(w, h) {
 	printdeck.setAttribute('rows', 50);
 	printdeck.setAttribute('cols', 50);
 	printdeck.setAttribute('class', 'exportArea');
+	printdeck.setAttribute('id', 'deck_export_area');
 
 	templist = deck_list.list;
 	bsPopup.innerHTML = "<p>" + deck_list.deckname + "</p>";

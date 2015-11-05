@@ -1,3 +1,87 @@
+#seekclasscards {
+  position: relative;
+  top: 27px;
+  left: 320px;
+}
+
+#seekclasscards:hover {
+  z-index: 2;
+  position: relative;
+  animation-name: grow;
+  -webkit-animation-name: grow;  
+
+  animation-duration: 200s; 
+  -webkit-animation-duration: 200s;
+
+  animation-iteration-count: ease-in;
+  -webkit-animation-iteration-count: ease-in;
+
+}
+
+#seekneutralcards {
+  position: relative;
+  top: 28px;
+  left: 330px;
+}
+
+#seekneutralcards:hover {
+  z-index: 2;
+  position: relative;
+  animation-name: grow;
+  -webkit-animation-name: grow;  
+
+  animation-duration: 200s; 
+  -webkit-animation-duration: 200s;
+
+  animation-iteration-count: ease-in;
+  -webkit-animation-iteration-count: ease-in;
+
+}
+
+#btn-next {
+  position: relative;
+  top: 32px;
+  left: 210px;
+  height: 34px !important;
+  width: 38px !important;
+}
+
+#btn-next:hover {
+  z-index: 2;
+  position: relative;
+  animation-name: grow;
+  -webkit-animation-name: grow;  
+
+  animation-duration: 200s; 
+  -webkit-animation-duration: 200s;
+
+  animation-iteration-count: ease-in;
+  -webkit-animation-iteration-count: ease-in;
+
+}
+
+#btn-prev {
+  position: relative;
+  top: 32px;
+  right: 210px;
+  height: 34px !important;
+  width: 38px !important;
+}
+
+#btn-prev:hover {
+  z-index: 2;
+  position: relative;
+  animation-name: grow;
+  -webkit-animation-name: grow;  
+
+  animation-duration: 200s; 
+  -webkit-animation-duration: 200s;
+
+  animation-iteration-count: ease-in;
+  -webkit-animation-iteration-count: ease-in;
+
+}
+
 .chart {
     height: 70px;
     width: 240px;
@@ -101,7 +185,7 @@ h1 {
 }
 
 .class_select_header {
-  padding: 20px 0px 0px 0px !important;
+  padding: 70px 0px 0px 0px !important;
 }
 
 body {
@@ -429,11 +513,13 @@ section {
 }
 
 #deckbuilder {
+  max-width: 1260px;
+  position: relative;
   width: auto;
   padding: 10px;
   height: 100%;
-  overflow-y: scroll;
-  background-image: url("/static/assets/parchment2.png");
+  overflow-y: hidden;
+  /*background-image: url("/static/assets/parchment2.png");*/
 }
 
 .hero_portrait {

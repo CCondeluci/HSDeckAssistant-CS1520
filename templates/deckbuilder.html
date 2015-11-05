@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 {% block content %}
-
+<script type="text/javascript" src="/static/js/list.pagination.min.js"></script>
 <div id="decklist">
 	<form id="decklist_saver_form" action="/mydecklists">
 		<svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
@@ -21,6 +21,18 @@
 </div>
 
 <div id="deckbuilder" class="container">
+	<div height="0px" style="height: 0px;">
+		<a id="seekclasscards" href="#" title="Class Cards">
+			<img height="40px" src="/static/assets/{{playerClass}}-icon.png">
+		</a>
+		<a id="seekneutralcards" href="#" title="Neutral Cards">
+			<img height="40px" src="/static/assets/neutral-icon.png">
+		</a>
+	</div>
+	<div class="card-page-navigation">
+		<a id="btn-prev" href="#" title="Previous"><img src="/static/assets/left_arrow.png"></a>
+		<a id="btn-next" href="#" title="Next"><img src="/static/assets/right_arrow.png"></a>
+	</div>
 	<input class="search" Placeholder="Search by card name, mana cost, type, rarity, etc..."/>
 	<div id="object" class="list slideLeft">
 		{% for ccard in class_cards %}
@@ -39,7 +51,7 @@
 			artist="{{ccard.artist}}"
 			title="{{ccard.name}}" 
 		>
-			<img class="builder_card" height="303" width="200" src="{{ccard.img}}">
+			<img class="builder_card" width="20%" src="{{ccard.img}}">
 			<p hidden class="name">{{ccard.name}}</p>
 			<p hidden class="type">{{ccard.type}}</p>
 			<p hidden class="cost">{{ccard.cost}}</p>
@@ -50,7 +62,19 @@
 			<p hidden class="mechanics">{{ccard.mechanics}}</p>
 		</a>
 		{% endfor %}
-	<hr>
+
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		{% if playerClass != "Hunter" %}
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		{% endif %}
+	
 		{% for ncard in neutral_cards %}
 		<a cardName="{{ncard.name}}" 
 			href="#" 
@@ -67,7 +91,7 @@
 			artist="{{ncard.artist}}"
 			title="{{ncard.name}}" 
 		>
-			<img class="builder_card" height="303" width="200" src="{{ncard.img}}">
+			<img class="builder_card" width="20%" src="{{ncard.img}}">
 			<p hidden class="name">{{ncard.name}}</p>
 			<p hidden class="type">{{ncard.type}}</p>
 			<p hidden class="cost">{{ncard.cost}}</p>
@@ -79,6 +103,8 @@
 		</a>
 		{% endfor %}
 	</div>
+	<div hidden class="pagination"></div>
+	
 </div>
 
 <!-- Modal -->
@@ -94,10 +120,10 @@
         <div class="modal-body" id="deckbody">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        	<button type= "button" class="btn btn-default" id="copy-button" data-clipboard-target="deck_export_area">Copy to Clipboard</button>
+          	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-      
     </div>
   </div>
 
@@ -129,13 +155,72 @@
   </div>
 
 <script type="text/javascript">
-	
+
 	// when .modal-wide opened, set content-body height based on browser height; 200 is appx height of modal padding, modal title and button bar
 
 	$(".modal-wide").on("show.bs.modal", function() {
 	  var height = $(window).height() - 200;
 	  $(this).find(".modal-body").css("max-height", height);
 	});
+
+	//next and previous buttons
+	$('#btn-next').on('click', function(){
+	    var list = $('.pagination').find('li');
+	    $.each(list, function(position, element){
+	        if($(element).is('.active')){
+	            $(list[position+1]).trigger('click');
+	        }
+	    })
+
+	})
+	$('#btn-prev').on('click', function(){
+	    var list = $('.pagination').find('li');
+	    $.each(list, function(position, element){
+	        if($(element).is('.active')){
+	            $(list[position-1]).trigger('click');
+	        }
+	    })
+	})
+
+	//next and previous keys
+	$("body").keydown(function(e) {
+	  if(e.keyCode == 37) { // left
+	    var list = $('.pagination').find('li');
+	    $.each(list, function(position, element){
+	        if($(element).is('.active')){
+	            $(list[position-1]).trigger('click');
+	        }
+	    })
+	  }
+	  else if(e.keyCode == 39) { // right
+	    var list = $('.pagination').find('li');
+	    $.each(list, function(position, element){
+	        if($(element).is('.active')){
+	            $(list[position+1]).trigger('click');
+	        }
+	    })
+	  }
+	});
+
+	//class and neutral card buttons
+	$('#seekclasscards').on('click', function(){
+	    var list = $('.pagination').find('li');
+	    $.each(list, function(position, element){
+	        if($(element).is('.active')){
+	            $(list[0]).trigger('click');
+	        }
+	    })
+
+	})
+	$('#seekneutralcards').on('click', function(){
+	    var list = $('.pagination').find('li');
+	    $.each(list, function(position, element){
+	        if($(element).is('.active')){
+	            $(list[6]).trigger('click');
+	        }
+	    })
+	})
+
 		
 </script>
 <script type="text/javascript" src="/static/js/deckbuilder.js"></script>
