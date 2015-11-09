@@ -3,13 +3,24 @@
 <script type="text/javascript" src="/static/js/list.pagination.min.js"></script>
 <div id="decklist">
 	<form id="decklist_saver_form" action="/mydecklists">
-		<svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
+		<div id="goldborder-top"></div>
+		<div id="chartborder">
+			<svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
+		</div>
 		<p id="curvelist"><img src="/static/assets/mana-curve.png"></p>
-		<input id="deck_name_box" type="text" name="deckname" Placeholder="Enter Deck Name Here...">
+		<div id="deckname_container">
+			<input id="deck_name_box" type="text" name="deckname" Placeholder="Enter Deck Name Here...">
+		</div>
 		<p id="cardcounter">0 / 30</p>
+		<div id="goldborder-bottom"></div>
+
+		<div id="scrollhandler">
 		<ul id='inner_list'>
 			<li></li>
 		</ul>
+		</div>
+
+		<div id="goldborder-top-below"></div>
 		<p id="dustcounter">0 Dust to Craft</p>
 		<p id="clearexport">
 			<button type="button" onclick="resetDeck()">Reset</button>
@@ -17,6 +28,7 @@
 			<!-- <button type="button" onclick="PrepareDeck()">Save</button> -->
 			<button type="button" data-toggle="modal" data-target="#writeupPopup">Save</button>
 		</p>
+		<div id="goldborder-bottom-below"></div>
 	</form>
 </div>
 
@@ -27,6 +39,9 @@
 		</a>
 		<a id="seekneutralcards" href="#" title="Neutral Cards">
 			<img height="40px" src="/static/assets/neutral-icon.png">
+		</a>
+		<a id="helppop" href="#" title="Neutral Cards" data-toggle="modal" data-target="#helpPopup">
+			<img height="35px" src="/static/assets/help.png">
 		</a>
 	</div>
 	<div class="card-page-navigation">
@@ -151,6 +166,42 @@
         </div>
       </div>
       
+    </div>
+  </div>
+
+<!-- Modal -->
+  <div class="modal fade" id="helpPopup" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">HSDeckAssistant Builder Help</h4>
+        </div>
+        <div class="modal-body" id="helpbody">
+
+        	<div style="text-align: left;">
+	       		<p>Deck Builder Features:</p>
+	       		<br>
+	       		<ul class="helplist">
+	       			<li>-  Navigation via keyboard (left/right), clickable arrows, or search.</li>
+	       			<li>-  Search by mana cost, tribe, name, artist, and card mechanics (Battlecry, Taunt, etc...).</li>
+	       			<li>-  Simply click on cards to add them to your deck!</li>
+	       			<li>-  Use mousewheel on decklist to view cards in "oversized" decklists</li>
+	       			<li>-  Jump to class and neutral cards with their respective buttons in the top right</li>
+	       			<li>-  Export your deck to Cockatrice format (compatible with hsDeckTracker and other tools)</li>
+	       			<li>-  Completely reset your deck with the "Reset" button</li>
+	       			<li>-  When you're done building, click the "Save" button to begin your deck's explanation in our Rich Text Editor. If you decide to change a card and close the editor, your progress persists unless you navigate away from this page.</li>
+	       		</ul>
+
+	       	</div>
+
+        </div>
+        <div class="modal-footer">
+          	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
 

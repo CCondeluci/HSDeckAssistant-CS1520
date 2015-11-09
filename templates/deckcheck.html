@@ -6,8 +6,12 @@
 	<div class="row con">
 		<div class="col-md-3 col-sm-3" id="checkdeckleftpanel">
 			<div class="checkdecklist" id="decklist" style="background-color:transparent;">
-				<svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
-				<p id="dustcounter"><img src="/static/assets/mana-curve.png"></p>
+				<div id="goldborder-top"></div>
+				<div id="chartborder">
+					<svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
+				</div>
+				<p id="curvelist"><img src="/static/assets/mana-curve.png"></p>
+				<div id="goldborder-bottom"></div>
 				<ul id='inner_list'>
 					{% for card in cardlist %}
 						<li id="{{card.cardId}}" class="{{card.rarity}}">
@@ -23,10 +27,12 @@
 						</li>
 					{% endfor %}
 				</ul>
+				<div id="goldborder-top-below"></div>
 				<p id="dustcounter">Dust Cost: {{deck.dustcost}}</p>
 				<p id="clearexport">
 					<button type="button" onclick="exportDeck(500, 500)" data-toggle="modal" data-target="#exportPopup">Export</button>
 				</p>
+				<div id="goldborder-bottom-below"></div>
 			</div>
 		</div>
 		<div class="col-md-8 col-sm-8" id="checkdeckrightpanel">
