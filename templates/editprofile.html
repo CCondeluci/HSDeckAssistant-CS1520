@@ -1,15 +1,13 @@
 {% extends "_base.html" %}
 {% block content %}
 
-<div class="container" style="padding-top:30px">
+<div class="content-div table-responsive" style="padding-top:30px">
     <img alt="user avatar" src="{{user_pic}}"></img>
     <br/><h3>{{ username }}</h3>
     <form enctype="multipart/form-data" method="post" action="{{upload_url}}" onsubmit="return validateFile(this);">
-        <div class="container" style="padding-top:30px">
-            <label>Edit profile picture:</label><br/>
-            <div align="center"><input type="file" id="in_pic" name="pic"/><br/><br/></div>
-            <input style="width:15%" type="submit" />
-        </div>
+        <h3>Edit profile picture:</h3><br/>
+        <div align="center"><input type="file" id="in_pic" name="pic"/><br/><br/></div>
+        <input style="width:15%" type="submit" />
     </form>
 </div>
 <script src="/static/js/validateFile.js" />
