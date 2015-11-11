@@ -75,16 +75,29 @@
 			<p hidden class="artist">{{ccard.artist}}</p>
 			<p hidden class="cardset">{{ccard.cardSet}}</p>
 			<p hidden class="mechanics">{{ccard.mechanics}}</p>
+			<p hidden class="cardtext">{{ccard.text}}</p>
 		</a>
 		{% endfor %}
 
+		{% if playerClass == "Hunter" %}
 		<a class="placeholder">
 			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
 		</a>
 		<a class="placeholder">
 			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
 		</a>
-		{% if playerClass != "Hunter" %}
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
 		<a class="placeholder">
 			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
 		</a>
@@ -113,8 +126,9 @@
 			<p hidden class="rarity">{{ncard.rarity}}</p>
 			<p hidden class="race">{{ncard.race}}</p>
 			<p hidden class="artist">{{ncard.artist}}</p>
-			<p hidden class="cardset">{{ncard.cardset}}</p>
+			<p hidden class="cardset">{{ncard.cardSet}}</p>
 			<p hidden class="mechanics">{{ncard.mechanics}}</p>
+			<p hidden class="cardtext">{{ncard.text}}</p>
 		</a>
 		{% endfor %}
 	</div>
@@ -207,6 +221,14 @@
 
 <script type="text/javascript">
 
+	var neutralPosition = 0;
+
+	{% if playerClass == "Hunter" %}
+		neutralPosition = 7;
+	{% else %}
+		neutralPosition = 6;
+	{% endif %}
+
 	// when .modal-wide opened, set content-body height based on browser height; 200 is appx height of modal padding, modal title and button bar
 
 	$(".modal-wide").on("show.bs.modal", function() {
@@ -267,7 +289,7 @@
 	    var list = $('.pagination').find('li');
 	    $.each(list, function(position, element){
 	        if($(element).is('.active')){
-	            $(list[6]).trigger('click');
+	            $(list[neutralPosition]).trigger('click');
 	        }
 	    })
 	})

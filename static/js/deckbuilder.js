@@ -2,7 +2,7 @@
 
 //list.js initialization
 var options = {
-    valueNames: [ 'name','type','cost','rarity','race','artist','cardset','mechanics' ],
+    valueNames: [ 'name','type','cost','rarity','race','artist','cardset','mechanics', 'cardtext' ],
     page:8,
     plugins: [
       ListPagination({
@@ -224,14 +224,16 @@ function removeCard(card) {
 		main_list.removeChild(card_id);
 		deck_list.decksize--;
 
-		var leftoverTooltip = document.getElementsByClassName("wowhead-tooltip hearthhead-tooltip-image");
+		var leftoverTooltip = document.getElementsByClassName("wowhead-tooltip");
 		if(leftoverTooltip)
 			leftoverTooltip[0].setAttribute('style', 'position: absolute; top: 251px; left: 221px; width: 200px; visibility: hidden; display: none;');
 		leftoverTooltip = document.getElementsByClassName("wowhead-tooltip");
-		if(leftoverTooltip)
+		if(leftoverTooltip){
 			leftoverTooltip[0].setAttribute('style', 'position: absolute; top: -2323px; left: -2323px; width: 0px; display: none; visibility: hidden;');
-
+			leftoverTooltip[1].setAttribute('style', 'position: absolute; top: -2323px; left: -2323px; width: 0px; display: none; visibility: hidden;');
+		}	
 	}
+
 
 
 	sortDeckList();
@@ -272,6 +274,8 @@ function getCardDust (card) {
 	else if( card.cardSet == "Blackrock Mountain" )
 		dust = 0;
 	else if( card.cardSet == "Naxxramas" )
+		dust = 0;
+	else if( card.cardSet == "The League of Explorers" )
 		dust = 0;
 
 	return dust;

@@ -1,3 +1,13 @@
+.pagination {
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
+}
+
+.search {
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
+}
+
 #scrollhandler {
   overflow:scroll;
   overflow-x:hidden;
@@ -46,6 +56,8 @@
   position: relative;
   top: 27px;
   left: -335px;
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
 }
 
 #helppop:hover {
@@ -64,7 +76,9 @@
 #seekclasscards {
   position: relative;
   top: 27px;
-  left: 320px;
+  left: 325px;
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
 }
 
 #seekclasscards:hover {
@@ -84,7 +98,9 @@
 #seekneutralcards {
   position: relative;
   top: 28px;
-  left: 330px;
+  left: 335px;
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
 }
 
 #seekneutralcards:hover {
@@ -107,6 +123,8 @@
   left: 210px;
   height: 34px !important;
   width: 38px !important;
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
 }
 
 #btn-next:hover {
@@ -129,6 +147,8 @@
   right: 210px;
   height: 34px !important;
   width: 38px !important;
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
 }
 
 #btn-prev:hover {
@@ -227,10 +247,7 @@
   filter: blur(5px);
   -webkit-filter: blur(5px);
   height: 100%;
-  left: -10;
   position: fixed;
-  right: -10;
-  bottom: -20;
   z-index: 1;
   overflow: hidden;
 }
@@ -257,7 +274,8 @@ body {
   font-family: Helvetica;
   text-align: center;
   padding-top: 50px;
-  background-image: url('/static/assets/index-bg.png')
+  background-image: url('/static/assets/index-bg.png');
+  overflow: hidden;
 }
 
 h2 {
@@ -448,6 +466,7 @@ section {
   background-image: url('/static/assets/decklist-bg.png');
   font-family: 'Source Sans Pro','Open Sans','Helvetica','Arial',sans-serif;
   font-size: 13px;
+  box-shadow: -20px 0 20px -20px black, 20px 0 20px -20px black;
 }
 
 #decklist ul {
@@ -606,7 +625,8 @@ section {
   padding: 10px;
   height: 100%;
   overflow-y: hidden;
-  /*background-image: url("/static/assets/parchment2.png");*/
+  background-image: url("/static/assets/parchment.png");
+  box-shadow: -20px 0 20px -20px black, 20px 0 20px -20px black;
 }
 
 .hero_portrait {
@@ -919,6 +939,7 @@ a.hovertext_card:hover:after, a.hovertext:focus:after {
   margin-left: 0;
   margin-bottom: -16px;
 }
+
 .content-div{
     width: 65%;
     height: 100%;
@@ -926,4 +947,9 @@ a.hovertext_card:hover:after, a.hovertext:focus:after {
     background-image: url("/static/assets/parchment.png");
     margin: 0 auto;
     padding:2em;
+  overflow-y:scroll;
+}
+
+.deckcheck-fix{
+  top: -20px;
 }
