@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% block content %}
 
-<div class="container" style="padding-top:30px">
+<div class="content-div" style="padding-top:30px">
     <img alt="user avatar" src="{{user_pic}}"></img>
     <br/><h3>{{ username }}</h3>
     <form enctype="multipart/form-data" method="post" action="{{upload_url}}" onsubmit="return validateFile(this);">
