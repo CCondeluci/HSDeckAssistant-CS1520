@@ -221,6 +221,26 @@
 
 <script type="text/javascript">
 
+	if($(window).width() < 1601 && $(window).width() > 1400)
+		$('#deckbuilder').attr('style', 'width:62%');
+	else if($(window).width() < 1400)
+		$('#deckbuilder').attr('style', 'width:55%');
+	else
+		$('#deckbuilder').attr('style', 'width:auto');
+
+	document.getElementsByTagName("body")[0].setAttribute("onresize", "resize_check()");
+
+	function resize_check () {
+
+		if($(window).width() < 1601 && $(window).width() > 1400)
+			$('#deckbuilder').attr('style', 'width:62%');
+		else if($(window).width() < 1400)
+			$('#deckbuilder').attr('style', 'width:55%');
+		else
+			$('#deckbuilder').attr('style', 'width:auto');
+	}
+	
+
 	var neutralPosition = 0;
 
 	{% if playerClass == "Hunter" %}

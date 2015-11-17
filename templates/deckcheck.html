@@ -12,25 +12,31 @@
 				</div>
 				<p id="curvelist"><img src="/static/assets/mana-curve.png"></p>
 				<div id="goldborder-bottom"></div>
-				<ul id='inner_list'>
-					{% for card in cardlist %}
-						<li id="{{card.cardId}}" class="{{card.rarity}}">
-							<a onclick="return false;" id="tooltip-container" href="http://www.hearthhead.com/card={{card.hheadID}}">
-								<div class="deckcardimage" style="background-image: url('{{card.imgurl}}');"></div>
-								<div class="content">
-									<div class="mana">{{card.mana}}</div>
-									<div class="deckcardname">{{card.cardName}}</div>
-									<div class="spacer"></div>
-									<div class="cardcount">{{card.count}}</div>
-								</div>
-							</a>
-						</li>
-					{% endfor %}
-				</ul>
+				<div id="scrollhandler-check">
+					<ul id='inner_list'>
+						{% for card in cardlist %}
+							<li id="{{card.cardId}}" class="{{card.rarity}}">
+								<a onclick="return false;" id="tooltip-container" href="http://www.hearthhead.com/card={{card.hheadID}}">
+									<div class="deckcardimage" style="background-image: url('{{card.imgurl}}');"></div>
+									<div class="content">
+										<div class="mana">{{card.mana}}</div>
+										<div class="deckcardname">{{card.cardName}}</div>
+										<div class="spacer"></div>
+										<div class="cardcount">{{card.count}}</div>
+									</div>
+								</a>
+							</li>
+						{% endfor %}
+						<li> _ </li>
+						<li> _ </li>
+						<li> _ </li>
+					</ul>
+				</div>
 				<div id="goldborder-top-below"></div>
 				<p id="dustcounter">Dust Cost: {{deck.dustcost}}</p>
 				<p id="clearexport">
 					<button type="button" onclick="exportDeck(500, 500)" data-toggle="modal" data-target="#exportPopup">Export</button>
+					<button type="button" data-toggle="modal" data-target="#helpPopup">Help</button>
 				</p>
 				<div id="goldborder-bottom-below"></div>
 			</div>
@@ -67,6 +73,37 @@
         </div>
       </div>
       
+    </div>
+  </div>
+
+<!-- Modal -->
+  <div class="modal fade" id="helpPopup" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">HSDeckAssistant Explanation Help</h4>
+        </div>
+        <div class="modal-body" id="helpbody">
+
+        	<div style="text-align: left;">
+	       		<p>Explanation Page Features:</p>
+	       		<br>
+	       		<ul class="helplist">
+	       			<li>-  You can scroll through the decklist to the left with your mouse wheel.</li>
+	       			<li>-  Hovering over cards will display them as a tooltip.</li>
+	       			<li>-  "Like" a deck to show that you're interested in it!</li>
+	       			<li>-  "Export" this deck to Cockatrice format (compatible with hsDeckTracker and other tools)</li>
+	       		</ul>
+	       	</div>
+
+        </div>
+        <div class="modal-footer">
+          	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
 

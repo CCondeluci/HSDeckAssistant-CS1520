@@ -1,3 +1,12 @@
+#hero_select_img{
+
+  width: 100%;
+}
+
+.tablespace{
+  width: 37%;
+}
+
 .pagination {
   -webkit-filter: drop-shadow(5px 5px 5px #222);
   filter: drop-shadow(5px 5px 5px #222);
@@ -18,6 +27,18 @@
 #scrollhandler::-webkit-scrollbar { 
     display: none; 
 }
+
+#scrollhandler-check {
+  overflow:scroll;
+  overflow-x:hidden;
+  height:75%;
+  position: relative;
+}
+
+#scrollhandler-check::-webkit-scrollbar { 
+    display: none; 
+}
+
 
 #goldborder-top {
   background-image: url('/static/assets/goldborder-top.png');
@@ -256,18 +277,21 @@
   position: relative;
   z-index: 2;
   overflow: hidden;
+  width: 100%;
+
 }
 
 h1 {
   padding: 20px 0px 20px 0px;
   font-family: Helvetica;
-  font-size: 50pt !important;
+  font-size: 50pt;
   color: #FFF;
   text-shadow: 2px 2px 5px #000000;
 }
 
 .class_select_header {
-  padding: 70px 0px 0px 0px !important;
+  padding: 3% 0px 0px 0px !important;
+  font-size: 4vw;
 }
 
 body {
@@ -275,7 +299,7 @@ body {
   text-align: center;
   padding-top: 50px;
   background-image: url('/static/assets/index-bg.png');
-  overflow: auto;
+  overflow: hidden;
 }
 
 h2 {
@@ -673,7 +697,7 @@ section {
 
 a.hovertext {
     position: relative;
-    width: 200px;
+    width: 100%;
     text-decoration: none !important;
     text-align: center;
 }
@@ -682,10 +706,11 @@ a.hovertext:after {
     z-index: 2;
     content: attr(title);
     position: absolute;
-    left: -10;
-    bottom: -80;
-    padding: 0.5em 20px;
-    width: 220px;
+    left: -5%;
+    margin-bottom: -35%;
+    bottom: 0;
+    padding: 0.5em 10%;
+    width: 110%;
     background: rgba(0,0,0,0.8);
     text-decoration: none !important;
     color: #fff;
