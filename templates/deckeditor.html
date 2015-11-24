@@ -9,7 +9,7 @@
 		</div>
 		<p id="curvelist"><img src="/static/assets/mana-curve.png"></p>
 		<div id="deckname_container">
-			<input id="deck_name_box" type="text" Placeholder="Enter Deck Name Here...">
+			<input id="deck_name_box" type="text" value="{{deck.name}}">
 		</div>
 		<p id="cardcounter">0 / 30</p>
 		<div id="goldborder-bottom"></div>
@@ -203,11 +203,12 @@
         <div id="txtEditor"></div>
 		<script type="text/javascript">
 			$(document).ready( function() {
-				var editor = $("#txtEditor").Editor({'togglescreen':false, 'fonts':false});          
+				var editor = $("#txtEditor").Editor({'togglescreen':false, 'fonts':false});
+				$("#txtEditor").Editor("setText", unescape('{{deck.write_up|safe}}'));          
 			});
 		</script>
         <div class="modal-footer">
-		  <button type="button" class="btn btn-default" id="writeupsave" onclick="PrepareDeck()">Save</button>
+		  <button type="button" class="btn btn-default" id="writeupsave" onclick="PrepareDeckForEdit()">Save</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
@@ -253,6 +254,23 @@
 
 <script type="text/javascript" src="/static/js/deckbuilder.js"></script>
 <script type="text/javascript">
+
+	//load in the cardlist, add all cards to the deck
+	{% for card in cardlist %}
+		var edit_dcard = new Object();
+		edit_dcard.cardName = "{{card.cardName}}";
+		edit_dcard.count = 1;
+		edit_dcard.rarity = "{{card.rarity}}";
+		edit_dcard.cardId = "{{card.cardId}}";
+		edit_dcard.imgurl = "{{card.imgurl}}";
+		edit_dcard.cardSet = "{{card.cardSet}}";
+		edit_dcard.mana = {{card.mana}};
+
+		addCardImport(edit_dcard);
+
+		if({{card.count}} >= 2)
+			addCardImport(edit_dcard)
+	{% endfor %}
 
 	if($(window).width() < 1601 && $(window).width() > 1400)
 		$('#deckbuilder').attr('style', 'width:62%');
@@ -347,9 +365,8 @@
 	    })
 	})
 
-
 	//Sends ajax request that adds deck to ndb
-	function PrepareDeck(){
+	function PrepareDeckForEdit(){
 
 		if( flag > 0 )
 			return false;
@@ -375,7 +392,7 @@
 			$.ajax({
 
 				type: "POST",
-				url: "/savedeck",
+				url: "/savedeckedit?id={{deck.key.urlsafe}}",
 				data: {inputData: $test}
 
 			}).done(function(data){
@@ -384,7 +401,7 @@
 
 			flag++;
 
-			window.location.href = "/profile?user={{username}}";
+			window.location.href = "/profile?user={{username}}";			
 		}
 	}
 

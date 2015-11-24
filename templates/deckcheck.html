@@ -47,7 +47,8 @@
 			<br>
 			<p>Deck Description:</p>
 			<br>
-			{{deck.write_up|safe}}
+			<div id="writeup_area"></div>
+			<script type="text/javascript">document.getElementById('writeup_area').innerHTML = unescape("{{deck.write_up|safe}}")</script>
 			<br>
 			<br>
 		</div>

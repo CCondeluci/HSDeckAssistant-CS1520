@@ -71,48 +71,6 @@ function getQueryVariable(variable) {
   } 
 }
 
-//Sends ajax request that adds deck to ndb
-function PrepareDeck(){
-
-	if( flag > 0 )
-		return false;
-
-	sortDeckList();
-	checkDeckSize();
-	checkDeckCost();
-	
-	if(deck_list.decksize < 30){
-		alert("You cannot save a deck smaller than 30 cards!");
-		return false;
-	}
-	else if(deck_list.deckname == "Enter Deck Name Here..." || deck_list.deckname == ""){
-		alert("You cannot save a deck without a name!");
-		return false;
-	}
-	else {
-		deck_list.deck_class = getQueryVariable("class");
-		// deck_list.write_up = document.getElementById('writeupbody').innerHTML;
-		deck_list.write_up = $("#txtEditor").Editor("getText");
-		$test = JSON.stringify(deck_list);
-
-		$.ajax({
-
-			type: "POST",
-			url: "/savedeck",
-			data: {inputData: $test}
-
-		}).done(function(data){
-			console.log(data);
-		});
-
-		document.forms['decklist_saver_form'].submit();
-
-		flag++;
-
-		
-	}
-}
-
 //constructor for a card in a decklist
 function make_dcard(card) {
 
@@ -333,7 +291,7 @@ function checkDeckCost() {
 //Resets the decklist both visually and on the backend
 function resetDeck() {
 	var main_list = document.getElementById('inner_list');
-	main_list.innerHTML = '<li></li>';
+	main_list.innerHTML = '<li></li><li> _ </li><li> _ </li><li> _ </li>';
 
 	deck_list = {
 		list: [],
@@ -381,5 +339,133 @@ function exportDeck(w, h) {
 	}
 
 	bsPopup.appendChild(printdeck);
+}
+
+//Import a deck in Cockatrice format
+function importDeck() {
+	resetDeck();
+	checkDeckSize();
+	checkDeckCost();
+
+	var load_p = document.getElementById('process_p');
+	load_p.innerHTML = "Importing...";
+
+	var curr_class = getQueryVariable("class");
+
+	var cockatriceList = $('#import_textarea').val().split('\n');
+	for(var i = 0; i < cockatriceList.length; i++){
+    	
+    	var curr_line = cockatriceList[i].split(/ (.+)?/);
+		var curr_count = curr_line[0];
+		var curr_name = curr_line[1];
+
+		var parsedData = new Object();
+
+		$.ajax({
+
+	        type: "GET",
+	        async: false,
+	        url: "/singlecardcheck",
+	        data: {card_name: curr_name},
+	        success: function(data){
+
+		    	parsedData = JSON.parse(data);
+
+		    	if( (parsedData.error == 404) )
+		    		return true;
+
+		    	if( deck_list.decksize == 30 ){
+		    		alert("You tried to import more than 30 cards! Your " + curr_count + " " + curr_name + "(s) will not be imported.");
+		    		return;
+		    	}
+
+		        if( (curr_name == parsedData[0].name) && (parsedData[0].playerClass == curr_class || typeof parsedData[0].playerClass === "undefined") && (parsedData[0].type != "Hero") ){
+		        	var import_dcard = new Object();
+					import_dcard.cardName = parsedData[0].name;
+					import_dcard.count = 1;
+					import_dcard.rarity = parsedData[0].rarity;
+					import_dcard.cardId = parsedData[0].cardId;
+					import_dcard.imgurl = parsedData[0].img;
+					import_dcard.cardSet = parsedData[0].cardSet;
+					import_dcard.mana = parsedData[0].cost;
+
+					addCardImport(import_dcard);
+
+					if(curr_count >= 2)
+						addCardImport(import_dcard)
+		        }
+
+	    	},
+	    	error: function(data){
+			    console.log(data);
+			}
+	    });
+	}
+
+	load_p.innerHTML = "Import Complete!";
+}
+
+//Add card to the decklist, both visually and on backend FROM IMPORTED CARD ONLY
+function addCardImport(import_card) {
+
+	sortDeckList();
+
+	var main_list = document.getElementById('inner_list');
+	var current_dcard = import_card;
+	var index = deck_list.list.map(function(e) { return e.cardName; }).indexOf(current_dcard.cardName);
+
+	//alert(index);
+
+	if( index == -1 && deck_list.decksize < 30){
+		deck_list.list.push(current_dcard);
+		deck_list.decksize++;
+		deck_list.dustcost += getCardDust(current_dcard);
+
+		if(current_dcard.mana >= 7)
+			deck_list.curve[7] += 1;
+		else
+			deck_list.curve[current_dcard.mana] += 1;
+
+	}
+	else if (index >= 0 && deck_list.list[index].count < 2 && deck_list.decksize < 30 && current_dcard.rarity != "Legendary") {
+		deck_list.list[index].count += 1;
+		current_dcard = deck_list.list[index];
+		deck_list.decksize++;
+		deck_list.dustcost += getCardDust(current_dcard);
+
+		if(current_dcard.mana >= 7)
+			deck_list.curve[7] += 1;
+		else
+			deck_list.curve[current_dcard.mana] += 1;
+	}
+	else {
+		current_dcard = deck_list.list[index];
+	}
+
+	sortDeckList();
+	index = deck_list.list.map(function(e) { return e.cardName; }).indexOf(current_dcard.cardName);
+
+	var existCheck = document.getElementById(current_dcard.cardId);
+
+    
+	if( existCheck == null ){
+
+	 	var path_drill = '//Card[a = \'' + current_dcard.cardId + '\']/h';
+		var hheadID_url = xmlDoc.evaluate(path_drill, xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue;
+		current_dcard.hheadID = hheadID_url;
+
+		$("#inner_list li").eq(index).after("<li id=\"" + current_dcard.cardId + "\" onclick=\"removeCard(this)\" class=\"" + current_dcard.rarity + "\"><a onclick=\"return false;\" id=\"tooltip-container\" href=\"http://www.hearthhead.com/card=" + hheadID_url +"\"><div class=\"deckcardimage\" style=\"background-image: url('" + current_dcard.imgurl + "');\"></div>" + "<div class=\"content\"> <div class=\"mana\">" + current_dcard.mana + "</div><div class=\"deckcardname\">" + current_dcard.cardName + "</div><div class=\"spacer\"></div><div class=\"cardcount\">" + current_dcard.count + "</div>\n</div>\n</a></li>");
+	}
+	else {
+		var card_count = document.getElementById(current_dcard.cardId).childNodes[0].childNodes[1].childNodes[4];
+
+		if( current_dcard.count <= 2 && current_dcard.rarity != "Legendary"){
+			card_count.innerHTML = current_dcard.count;
+		}
+	}
+
+	checkDeckSize();
+	checkDeckCost();
+	return false;
 }
 
