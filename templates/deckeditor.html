@@ -258,7 +258,7 @@
 	//load in the cardlist, add all cards to the deck
 	{% for card in cardlist %}
 		var edit_dcard = new Object();
-		edit_dcard.cardName = "{{card.cardName}}";
+		edit_dcard.cardName = "{{card.cardName|safe}}";
 		edit_dcard.count = 1;
 		edit_dcard.rarity = "{{card.rarity}}";
 		edit_dcard.cardId = "{{card.cardId}}";
