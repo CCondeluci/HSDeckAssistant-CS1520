@@ -270,6 +270,56 @@ class DeckList(ndb.Model):
 	write_up = ndb.TextProperty()
 	curve = ndb.IntegerProperty(repeated=True)
 
+	def add_like(self, user):
+	  DeckLike.get_or_insert(user, parent=self.key)
+	
+	def remove_like(self, user):
+	  deck_like = DeckLike.get_by_id(user, parent=self.key)
+	  if deck_like:
+		deck_like.key.delete()
+	
+	def count_likes(self):
+	  q = DeckLike.query(ancestor=self.key)
+	  return q.count()
+	
+	def is_liked(self, user):
+	  result = False
+	  if DeckLike.get_by_id(user, parent=self.key):
+		result = True
+	  return result
+	
+	def create_comment(self, user, text):
+	  comment = DeckComment(parent=self.key)
+	  comment.user = user
+	  comment.text = text
+	  comment.put()
+	  return comment
+	
+	def get_comments(self):
+	  result = list()
+	  q = DeckComment.query(ancestor=self.key)
+	  q = q.order(-DeckComment.time_created)
+	  for comment in q.fetch(1000):
+		result.append(comment)
+	  return result
+	
+	def count_comments(self):
+	  q = DeckComment.query(ancestor=self.key)
+	  return q.count()
+	
+
+###############################################################################
+def get_images():
+  result = list()
+  q = PostedImage.query()
+  q = q.order(-PostedImage.time_created)
+  for img in q.fetch(100):
+	img.count = img.count_votes()
+	img.comment_count = img.count_comments()
+	result.append(img)
+  return result
+
+
 ###############################################################################
 class UserInfo(ndb.Model):
 	email = ndb.StringProperty()
@@ -332,6 +382,11 @@ class DeckCheckHandler(webapp2.RequestHandler):
 		id = self.request.get('id')
 		deck = get_deck(id)
 		email = get_user_email()
+		if email:
+			deck.liked = deck.is_liked(email)
+		deck.comments = deck.get_comments()
+		deck.comment_count = len(deck.comments)
+		deck.count = deck.count_likes()
 		cardlist = json.loads(deck.decklist)
 		if deck:
 			page_params = get_base_params(email)
@@ -341,6 +396,52 @@ class DeckCheckHandler(webapp2.RequestHandler):
 			render_template(self, 'deckcheck.html', page_params)
 		else:
 			self.redirect('/profile')
+
+###############################################################################
+class DeckComment(ndb.Model):
+  user = ndb.StringProperty()
+  text = ndb.TextProperty()
+  time_created = ndb.DateTimeProperty(auto_now_add=True)			
+
+###############################################################################
+class DeckLike(ndb.Model):
+  pass
+
+###############################################################################
+class LikeHandler(webapp2.RequestHandler):
+  def get(self):
+	email = get_user_email()
+	if email:
+	  deck_id = self.request.get('id')
+	  deck = get_deck(deck_id)
+	  deck.add_like(email)
+	self.redirect('/deckcheck?id=' + deck_id)
+
+###############################################################################
+class UnlikeHandler(webapp2.RequestHandler):
+  def get(self):
+	email = get_user_email()
+	if email:
+	  deck_id = self.request.get('id')
+	  deck = get_deck(deck_id)
+	  deck.remove_like(email)
+	self.redirect('/deckcheck?id=' + deck_id)
+ 
+###############################################################################
+class CommentHandler(webapp2.RequestHandler):
+  def post(self):
+	email = get_user_email()
+	if email: 
+	  deck_id = self.request.get('deck-id')
+	  deck = get_deck(deck_id)
+	  curr_username = UserInfo.get_userinfo().get_username()
+	  if deck:
+		text = self.request.get('comment')
+		if text != "":
+			deck.create_comment(curr_username, text)
+		self.redirect('/deckcheck?id=' + deck_id)
+	else:
+	  self.redirect('/deckcheck')
 
 ###############################################################################
 class DeckEditHandler(webapp2.RequestHandler):
@@ -508,5 +609,8 @@ app = webapp2.WSGIApplication([
 				('/sendfeedback', SendFeedbackHandler),
 				('/singlecardcheck', SingleCheckHandler),
 				('/deckeditor', DeckEditHandler),
-				('/savedeckedit', SaveDeckEdit)
+				('/savedeckedit', SaveDeckEdit),
+				('/like', LikeHandler),
+				('/unlike', UnlikeHandler),
+				('/comment', CommentHandler)
 ], debug=True)

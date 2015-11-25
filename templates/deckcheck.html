@@ -45,11 +45,48 @@
 			<h1>{{deck.name}}</h1>
 			<h2>{{deck.deck_class}}</h2>
 			<br>
-			<p>Deck Description:</p>
+			<p>
+				{{deck.count}} {% if deck.count == 1 %}user likes{% else %}users like{% endif %} this deck. 
+				{% if user_email %}
+				<br><i>
+				{% if deck.liked %}
+				You like this deck.<br><a href="/unlike?id={{deck.key.urlsafe}}">Click to Unlike</a>
+				{% else %}
+				<a href="/like?id={{deck.key.urlsafe}}">Click to Like</a>
+				{% endif %}
+				</i><br>
+				{% endif %}
+			</p>
 			<br>
 			<div id="writeup_area"></div>
 			<script type="text/javascript">document.getElementById('writeup_area').innerHTML = unescape("{{deck.write_up|safe}}")</script>
 			<br>
+			<hr>
+			<br>
+			<div style="text-align: left">
+
+				{% for comment in deck.comments %}
+				<b>{{comment.user}}</b> at <i>{{comment.time_created}}</i><br>
+				{{comment.text}}<br><br>
+				{% endfor %}
+
+				<br>
+				<hr>
+				<br>
+				{{deck.comment_count}} total {% if deck.comment_count == 1 %}comment{% else %}comments{% endif %}
+				<br>
+				{% if user_email %}
+				<br>
+				<b>Add Comment</b><br>
+				<form method="post" action="/comment">
+				<input type="hidden" name="deck-id" value="{{deck.key.urlsafe}}">
+				<textarea name="comment"></textarea><br>
+				<input type="submit">
+				</form>
+				{% endif %}
+		
+			</div>
+
 			<br>
 		</div>
 		
