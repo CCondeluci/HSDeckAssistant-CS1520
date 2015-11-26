@@ -12,7 +12,9 @@
         <th>Likes</th>
         <th>Class</th>
         <th>Date Created</th>
+        {% if user_id %}
         <th>Revise</th>
+        {% endif %}
     </thead>
     <tbody>
     {% for deck in decks %}
@@ -22,7 +24,9 @@
         <td>{{deck.count_likes}}</td>
         <td>{{deck.deck_class}}</td>
         <td>{{deck.time_created}}</td>
+        {% if user_id %}
         <td><a href="/deckeditor?class={{deck.deck_class}}&id={{deck.key.urlsafe}}">Edit</a></td>
+        {% endif %}
       </tr>
     {% endfor %}
         
