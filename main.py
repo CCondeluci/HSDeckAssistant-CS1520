@@ -291,6 +291,7 @@ class DeckList(ndb.Model):
 	def create_comment(self, user, text):
 	  comment = DeckComment(parent=self.key)
 	  comment.user = user
+          comment.user_pic = UserInfo.get_pic_by_username(user)
 	  comment.text = text
 	  comment.put()
 	  return comment
@@ -300,6 +301,7 @@ class DeckList(ndb.Model):
 	  q = DeckComment.query(ancestor=self.key)
 	  q = q.order(-DeckComment.time_created)
 	  for comment in q.fetch(1000):
+                comment.user_pic = UserInfo.get_pic_by_username(comment.user)
 		result.append(comment)
 	  return result
 	
@@ -348,6 +350,12 @@ class UserInfo(ndb.Model):
 	@staticmethod
 	def get_decks_by_userinfo(userinfo):
 		return get_decks_for_user(userinfo.email)
+        @staticmethod 
+        def get_pic_by_username(username):
+            q = UserInfo.query(ancestor=USERINFO_KEY)
+            userinfo = q.filter(UserInfo.username == username).get()
+            return userinfo.pic_url
+
 	def get_user_pic(self):
 		return self.pic_url
 
@@ -400,6 +408,7 @@ class DeckCheckHandler(webapp2.RequestHandler):
 ###############################################################################
 class DeckComment(ndb.Model):
   user = ndb.StringProperty()
+  user_pic = ndb.StringProperty()
   text = ndb.TextProperty()
   time_created = ndb.DateTimeProperty(auto_now_add=True)			
 

@@ -2,157 +2,161 @@
 {% block content %}
 
 <div class="container-fluid" id="checkdeckmain">
-	<br>
-	<div class="row con">
-		<div class="col-md-3 col-sm-3" id="checkdeckleftpanel">
-			<div class="checkdecklist" id="decklist" style="background-color:transparent;">
-				<div id="goldborder-top"></div>
-				<div id="chartborder">
-					<svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
-				</div>
-				<p id="curvelist"><img src="/static/assets/mana-curve.png"></p>
-				<div id="goldborder-bottom"></div>
-				<div id="scrollhandler-check">
-					<ul id='inner_list'>
-						{% for card in cardlist %}
-							<li id="{{card.cardId}}" class="{{card.rarity}}">
-								<a onclick="return false;" id="tooltip-container" href="http://www.hearthhead.com/card={{card.hheadID}}">
-									<div class="deckcardimage" style="background-image: url('{{card.imgurl}}');"></div>
-									<div class="content">
-										<div class="mana">{{card.mana}}</div>
-										<div class="deckcardname">{{card.cardName}}</div>
-										<div class="spacer"></div>
-										<div class="cardcount">{{card.count}}</div>
-									</div>
-								</a>
-							</li>
-						{% endfor %}
-						<li> _ </li>
-						<li> _ </li>
-						<li> _ </li>
-					</ul>
-				</div>
-				<div id="goldborder-top-below"></div>
-				<p id="dustcounter">Dust Cost: {{deck.dustcost}}</p>
-				<p id="clearexport">
-					<button type="button" onclick="exportDeck(500, 500)" data-toggle="modal" data-target="#exportPopup">Export</button>
-					<button type="button" data-toggle="modal" data-target="#helpPopup">Help</button>
-				</p>
-				<div id="goldborder-bottom-below"></div>
-			</div>
-		</div>
-		<div class="col-md-8 col-sm-8 content-div deckcheck-fix" id="checkdeckrightpanel">
-			<h1>{{deck.name}}</h1>
-			<h2>{{deck.deck_class}}</h2>
-			<br>
-			<p>
-				{{deck.count}} {% if deck.count == 1 %}user likes{% else %}users like{% endif %} this deck. 
-				{% if user_email %}
-				<br><i>
-				{% if deck.liked %}
-				You like this deck.<br><a href="/unlike?id={{deck.key.urlsafe}}">Click to Unlike</a>
-				{% else %}
-				<a href="/like?id={{deck.key.urlsafe}}">Click to Like</a>
-				{% endif %}
-				</i><br>
-				{% endif %}
-			</p>
-			<br>
-			<div id="writeup_area"></div>
-			<script type="text/javascript">document.getElementById('writeup_area').innerHTML = unescape("{{deck.write_up|safe}}")</script>
-			<br>
-			<hr>
-			<br>
-			<div style="text-align: left">
+    <br>
+    <div class="row con">
+        <div class="col-md-3 col-sm-3" id="checkdeckleftpanel">
+            <div class="checkdecklist" id="decklist" style="background-color:transparent;">
+                <div id="goldborder-top"></div>
+                <div id="chartborder">
+                    <svg class="chart" data-bar-chart data-data="" data-bar-width="8"></svg>
+                </div>
+                <p id="curvelist"><img src="/static/assets/mana-curve.png"></p>
+                <div id="goldborder-bottom"></div>
+                <div id="scrollhandler-check">
+                    <ul id='inner_list'>
+                        {% for card in cardlist %}
+                        <li id="{{card.cardId}}" class="{{card.rarity}}">
+                            <a onclick="return false;" id="tooltip-container" href="http://www.hearthhead.com/card={{card.hheadID}}">
+                                <div class="deckcardimage" style="background-image: url('{{card.imgurl}}');"></div>
+                                <div class="content">
+                                    <div class="mana">{{card.mana}}</div>
+                                    <div class="deckcardname">{{card.cardName}}</div>
+                                    <div class="spacer"></div>
+                                    <div class="cardcount">{{card.count}}</div>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                        <li> _ </li>
+                        <li> _ </li>
+                        <li> _ </li>
+                    </ul>
+                </div>
+                <div id="goldborder-top-below"></div>
+                <p id="dustcounter">Dust Cost: {{deck.dustcost}}</p>
+                <p id="clearexport">
+                <button type="button" onclick="exportDeck(500, 500)" data-toggle="modal" data-target="#exportPopup">Export</button>
+                <button type="button" data-toggle="modal" data-target="#helpPopup">Help</button>
+                </p>
+                <div id="goldborder-bottom-below"></div>
+            </div>
+        </div>
+        <div class="col-md-8 col-sm-8 content-div deckcheck-fix" id="checkdeckrightpanel">
+            <h1>{{deck.name}}</h1>
+            <h2>{{deck.deck_class}}</h2>
+            <br>
+            <p>
+            {{deck.count}} {% if deck.count == 1 %}user likes{% else %}users like{% endif %} this deck. 
+            {% if user_email %}
+            <br><i>
+                {% if deck.liked %}
+                You like this deck.<br><a href="/unlike?id={{deck.key.urlsafe}}">Click to Unlike</a>
+                {% else %}
+                <a href="/like?id={{deck.key.urlsafe}}">Click to Like</a>
+                {% endif %}
+            </i><br>
+            {% endif %}
+            </p>
+            <br>
+            <div id="writeup_area"></div>
+            <script type="text/javascript">document.getElementById('writeup_area').innerHTML = unescape("{{deck.write_up|safe}}")</script>
+            <br>
+            <hr>
+            <br>
+            <div style="text-align: left">
 
-				{% for comment in deck.comments %}
-				<b>{{comment.user}}</b> at <i>{{comment.time_created}}</i><br>
-				{{comment.text}}<br><br>
-				{% endfor %}
+                {% for comment in deck.comments %}
 
-				<br>
-				<hr>
-				<br>
-				{{deck.comment_count}} total {% if deck.comment_count == 1 %}comment{% else %}comments{% endif %}
-				<br>
-				{% if user_email %}
-				<br>
-				<b>Add Comment</b><br>
-				<form method="post" action="/comment">
-				<input type="hidden" name="deck-id" value="{{deck.key.urlsafe}}">
-				<textarea name="comment"></textarea><br>
-				<input type="submit">
-				</form>
-				{% endif %}
-		
-			</div>
+                <img src="{{comment.user_pic}}" width=50 height=50></img><br/>
+                <b>{{comment.user}}</b> at <i>{{comment.time_created}}</i><br>
+                <div style="word-wrap:break-word;">
+                    &nbsp;{{comment.text}}
+                </div><br><br>
+                {% endfor %}
 
-			<br>
-		</div>
-		
-	</div>
+                <br>
+                <hr>
+                <br>
+                {{deck.comment_count}} total {% if deck.comment_count == 1 %}comment{% else %}comments{% endif %}
+                <br>
+                {% if user_email %}
+                <br>
+                <b>Add Comment</b><br>
+                <form method="post" action="/comment">
+                    <input type="hidden" name="deck-id" value="{{deck.key.urlsafe}}">
+                    <textarea name="comment"></textarea><br>
+                    <input type="submit">
+                </form>
+                {% endif %}
+
+            </div>
+
+            <br>
+        </div>
+
+    </div>
 </div>
 
 <!-- Modal -->
-  <div class="modal fade" id="exportPopup" role="dialog">
+<div class="modal fade" id="exportPopup" role="dialog">
     <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Decklist Export</h4>
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Decklist Export</h4>
+            </div>
+            <div class="modal-body" id="deckbody">
+            </div>
+            <div class="modal-footer">
+                <button type= "button" class="btn btn-default" id="copy-button" data-clipboard-target="checkClear">Copy to Clipboard</button>
+                <button type="button" onclick="" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-body" id="deckbody">
-        </div>
-        <div class="modal-footer">
-        	<button type= "button" class="btn btn-default" id="copy-button" data-clipboard-target="checkClear">Copy to Clipboard</button>
-          	<button type="button" onclick="" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
+
     </div>
-  </div>
+</div>
 
 <!-- Modal -->
-  <div class="modal fade" id="helpPopup" role="dialog">
+<div class="modal fade" id="helpPopup" role="dialog">
     <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">HSDeckAssistant Explanation Help</h4>
-        </div>
-        <div class="modal-body" id="helpbody">
 
-        	<div style="text-align: left;">
-	       		<p>Explanation Page Features:</p>
-	       		<br>
-	       		<ul class="helplist">
-	       			<li>-  You can scroll through the decklist to the left with your mouse wheel.</li>
-	       			<li>-  Hovering over cards will display them as a tooltip.</li>
-	       			<li>-  "Like" a deck to show that you're interested in it!</li>
-	       			<li>-  "Export" this deck to Cockatrice format (compatible with hsDeckTracker and other tools)</li>
-	       		</ul>
-	       	</div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">HSDeckAssistant Explanation Help</h4>
+            </div>
+            <div class="modal-body" id="helpbody">
 
+                <div style="text-align: left;">
+                    <p>Explanation Page Features:</p>
+                    <br>
+                    <ul class="helplist">
+                        <li>-  You can scroll through the decklist to the left with your mouse wheel.</li>
+                        <li>-  Hovering over cards will display them as a tooltip.</li>
+                        <li>-  "Like" a deck to show that you're interested in it!</li>
+                        <li>-  "Export" this deck to Cockatrice format (compatible with hsDeckTracker and other tools)</li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
 <script>
 
-  $('[data-bar-chart]').each(function (i, svg) {
-  	var curve = {{deck.curve}};
+$('[data-bar-chart]').each(function (i, svg) {
+    var curve = {{deck.curve}};
 
     var $svg = $(svg);
     var data = curve.map(function (datum) {
-      return parseFloat(datum);
+        return parseFloat(datum);
     });
 
     var barWidth = 29.5;
@@ -160,13 +164,13 @@
     var chartHeight = $svg.outerHeight();
 
     var y = d3.scale.linear()
-              .domain([0, d3.max(data)])
-              .range([0, chartHeight]);
+        .domain([0, d3.max(data)])
+        .range([0, chartHeight]);
 
     d3.select(svg)
-      .selectAll("rect")
+        .selectAll("rect")
         .data(data)
-      .enter().append("rect")
+        .enter().append("rect")
         .attr("class", "bar")
         .attr("width", barWidth)
         .attr("x", function (d, i) { return barWidth*i + barSpace*i; })
@@ -176,67 +180,67 @@
         .delay(function (d, i) { return i*100; })
         .attr("y", function (d, i) { return chartHeight-y(d); })
         .attr("height", function (d) { return y(d); });
-  });
+});
 </script>
 
 <script type="text/javascript">
-	
-	// "Define" objects that will be used in functions
-	var deck_list = {
-		list: [],
-		decksize: 30,
-		dustcost: {{deck.dustcost}},
-		deckname: "{{deck.name}}",
-		deck_class: "{{deck.deck_class}}",
-		write_up: ""
-	};
 
-	var d_card = {
+// "Define" objects that will be used in functions
+var deck_list = {
+    list: [],
+    decksize: 30,
+    dustcost: {{deck.dustcost}},
+    deckname: "{{deck.name}}",
+    deck_class: "{{deck.deck_class}}",
+    write_up: ""
+};
 
-		cardName: "",
-		count: 0,
-		rarity: 0,
-		cardId: "",
-		imgurl: "",
-		cardSet: "",
-		mana: 0,
-		hheadID: ""
-	};
+var d_card = {
 
-	setupDeck();
+    cardName: "",
+    count: 0,
+    rarity: 0,
+    cardId: "",
+    imgurl: "",
+    cardSet: "",
+    mana: 0,
+    hheadID: ""
+};
 
-	function setupDeck(){
+setupDeck();
 
-		{% for card in cardlist %}
-			var current_dcard = new Object();
-			current_dcard.cardName = "{{card.cardName}}";
-			current_dcard.count = {{card.count}};
-			current_dcard.mana = {{card.mana}};
+function setupDeck(){
 
-			deck_list.list.push(current_dcard);
-		{% endfor %}
+    {% for card in cardlist %}
+    var current_dcard = new Object();
+    current_dcard.cardName = "{{card.cardName}}";
+    current_dcard.count = {{card.count}};
+    current_dcard.mana = {{card.mana}};
 
-	}
+    deck_list.list.push(current_dcard);
+    {% endfor %}
 
-	//Export a deck to Cockatrice format
-	function exportDeck(w, h) {
-		var bsPopup = document.getElementById('deckbody');
-		bsPopup.innerHTML = "";
-		var printdeck = document.createElement('textarea');
-		printdeck.setAttribute('rows', 50);
-		printdeck.setAttribute('cols', 50);
-		printdeck.setAttribute('class', 'exportArea');
-		printdeck.setAttribute('id', 'checkClear');
+}
 
-		templist = deck_list.list;
-		bsPopup.innerHTML = "<p>" + deck_list.deckname + "</p>";
+//Export a deck to Cockatrice format
+function exportDeck(w, h) {
+    var bsPopup = document.getElementById('deckbody');
+    bsPopup.innerHTML = "";
+    var printdeck = document.createElement('textarea');
+    printdeck.setAttribute('rows', 50);
+    printdeck.setAttribute('cols', 50);
+    printdeck.setAttribute('class', 'exportArea');
+    printdeck.setAttribute('id', 'checkClear');
 
-		for( var x = 0; x < templist.length; x++ ) {
-			printdeck.innerHTML += templist[x].count + " " + templist[x].cardName + "\n";
-		}
+    templist = deck_list.list;
+    bsPopup.innerHTML = "<p>" + deck_list.deckname + "</p>";
 
-		bsPopup.appendChild(printdeck);
-	}
+    for( var x = 0; x < templist.length; x++ ) {
+        printdeck.innerHTML += templist[x].count + " " + templist[x].cardName + "\n";
+    }
+
+    bsPopup.appendChild(printdeck);
+}
 
 </script>
 
