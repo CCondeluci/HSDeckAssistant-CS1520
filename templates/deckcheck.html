@@ -43,20 +43,24 @@
         </div>
         <div class="col-md-8 col-sm-8 content-div deckcheck-fix" id="checkdeckrightpanel">
             <h1>{{deck.name}}</h1>
-            <h2>{{deck.deck_class}}</h2>
+            <h2><b>{{deck.deck_class}}</b></h2>
             <br>
-            <p>
-            {{deck.count}} {% if deck.count == 1 %}user likes{% else %}users like{% endif %} this deck. 
-            {% if user_email %}
-            <br><i>
-                {% if deck.liked %}
-                You like this deck.<br><a href="/unlike?id={{deck.key.urlsafe}}">Click to Unlike</a>
-                {% else %}
-                <a href="/like?id={{deck.key.urlsafe}}">Click to Like</a>
+            
+            <div class="like_div">
+                <p>
+                {{deck.count}} {% if deck.count == 1 %}user likes{% else %}users like{% endif %} this deck. 
+                {% if user_email %}
+                <br><i>
+                    {% if deck.liked %}
+                    You like this deck.<br><a href="/unlike?id={{deck.key.urlsafe}}">Click to Unlike</a>
+                    {% else %}
+                    <a href="/like?id={{deck.key.urlsafe}}">Click to Like</a>
+                    {% endif %}
+                </i><br>
                 {% endif %}
-            </i><br>
-            {% endif %}
-            </p>
+                </p>
+            </div>
+
             <br>
             <div id="writeup_area"></div>
             <script type="text/javascript">document.getElementById('writeup_area').innerHTML = unescape("{{deck.write_up|safe}}")</script>
@@ -65,29 +69,43 @@
             <br>
             <div style="text-align: left">
 
+                <h2 class="comment_header"><b>Comments</b></h2>
+
                 {% for comment in deck.comments %}
 
-                <img src="{{comment.user_pic}}" width=50 height=50></img><br/>
-                <b>{{comment.user}}</b> at <i>{{comment.time_created}}</i><br>
-                <div style="word-wrap:break-word;">
-                    &nbsp;{{comment.text}}
-                </div><br><br>
+                    <div class="check_comment">
+
+                        <img class="comment_prof_pic" src="{{comment.user_pic}}" width=50 height=50></img><br/>
+
+                        <div class="comment_name_time">
+                            <b>{{comment.user}}</b> at <i>{{comment.time_created}}</i><br>
+                        </div>
+
+                        <div class="comment_text" style="word-wrap:break-word;">
+                            {{comment.text}}
+                        </div>
+
+                    </div>
+
+                    <br><br>
+
                 {% endfor %}
 
-                <br>
+                {{deck.comment_count}} total {% if deck.comment_count == 1 %}comment{% else %}comments{% endif %}
                 <hr>
                 <br>
-                {{deck.comment_count}} total {% if deck.comment_count == 1 %}comment{% else %}comments{% endif %}
-                <br>
-                {% if user_email %}
-                <br>
-                <b>Add Comment</b><br>
-                <form method="post" action="/comment">
-                    <input type="hidden" name="deck-id" value="{{deck.key.urlsafe}}">
-                    <textarea name="comment"></textarea><br>
-                    <input type="submit">
-                </form>
-                {% endif %}
+                
+                <div class="add_comment" align="center">
+                    {% if user_email %}
+                        <b>Add Comment</b><br>
+                        <br>
+                        <form method="post" action="/comment">
+                            <input type="hidden" name="deck-id" value="{{deck.key.urlsafe}}">
+                            <textarea class="form-control" placeholder="Your comment here.." rows="15" name="comment"></textarea><br>
+                            <input class="btn" type="submit">
+                        </form>
+                    {% endif %}
+                </div>
 
             </div>
 
