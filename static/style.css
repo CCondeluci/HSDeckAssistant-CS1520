@@ -686,7 +686,7 @@ section {
   padding: 10px;
   height: 100%;
   overflow-y: hidden;
-  background-image: url("/static/assets/parchment.png");
+  background-image: url("/static/assets/parchment3.png");
   box-shadow: -20px 0 20px -20px black, 20px 0 20px -20px black;
 }
 
@@ -1006,7 +1006,7 @@ a.hovertext_card:hover:after, a.hovertext:focus:after {
     width: 65%;
     height: 100%;
     box-shadow: -20px 0 20px -20px black, 20px 0 20px -20px black;
-    background-image: url("/static/assets/parchment.png");
+    background-image: url("/static/assets/parchment3.png");
     margin: 0 auto;
     padding:2em;
   overflow-y:scroll;
