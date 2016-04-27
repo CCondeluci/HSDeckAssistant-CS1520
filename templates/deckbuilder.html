@@ -102,6 +102,25 @@
 		<a class="placeholder">
 			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
 		</a>
+		{% else %}
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
+		<a class="placeholder">
+			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
+		</a>
 		<a class="placeholder">
 			<img class="builder_card" width="20%" src="/static/assets/blank_card.png">
 		</a>
@@ -274,13 +293,13 @@
 	}
 	
 
-	var neutralPosition = 0;
+	var neutralPosition = 8;
 
-	{% if playerClass == "Hunter" %}
-		neutralPosition = 7;
-	{% else %}
-		neutralPosition = 6;
-	{% endif %}
+	// {% if playerClass == "Hunter" %}
+	// 	neutralPosition = 8;
+	// {% else %}
+	// 	neutralPosition = 8;
+	// {% endif %}
 
 	// when .modal-wide opened, set content-body height based on browser height; 200 is appx height of modal padding, modal title and button bar
 
